@@ -17,6 +17,7 @@ This new module will create 2 new models: incidencias and incapacidades, they wi
     'data': [
         'data/ir_sequence_data.xml',
         #'data/action_report_xls.xml',
+        'data/hr_data.xml',
         'security/ir.model.access.csv',
         'views/res_config_settings_views.xml',
         'views/viaticos_nomina_view.xml',

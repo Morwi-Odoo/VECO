@@ -98,7 +98,7 @@
     </record>
 -->
 
-       <record id="hr_payslip_run_form_nomina_cfdi" model="ir.ui.view">
+       <record id="hr_payslip_run_ext" model="ir.ui.view">
             <field name="name">hr.payslip.run.ext</field>
             <field name="model">hr.payslip.run</field>
             <field name="priority">50</field>

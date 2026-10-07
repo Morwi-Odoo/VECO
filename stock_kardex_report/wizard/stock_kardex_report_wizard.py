@@ -175,8 +175,8 @@ class StockKardexReportWiz(models.TransientModel):
                     initial_balance = total
                     for rec in moves:
                         move_id = self.env["stock.move"].sudo().browse(rec['move_id'])
-                        unit_cost = sum(move_id.stock_valuation_layer_ids.mapped("unit_cost"))
-                        total_cost = sum(move_id.stock_valuation_layer_ids.mapped("value"))              
+                        total_cost = move_id.value
+                        unit_cost = total_cost / move_id.quantity if move_id.quantity else 0
                         product_uom = self.env['uom.uom'].sudo().search([("id", "=", rec['product_uom_id'])])
                         done_qty = rec['quantity'] / product_uom.factor * product.uom_id.factor
                         if rec['location_id'] == location.id:
@@ -191,7 +191,7 @@ class StockKardexReportWiz(models.TransientModel):
                         else:
                             origin = textwrap.shorten(
                                 rec['move_name'], width=80, placeholder="...")
-                        if (self.warehouse_ids and move_id.stock_valuation_layer_ids) or (not self.warehouse_ids):
+                        if (self.warehouse_ids and move_id.is_valued) or (not self.warehouse_ids):
                             line = {
                                 'move_id': rec['move_id'],
                                 'product_id': rec['product_id'],
@@ -250,7 +250,7 @@ class StockKardexReportWiz(models.TransientModel):
             domain = [("unit_cost","!=", 0), ("total_cost","!=", 0) ]
         action = {
             'type': 'ir.actions.act_window',
-            'views': [(tree_view_id, 'tree'),(form_view_id, 'form')],
+            'views': [(tree_view_id, 'list'),(form_view_id, 'form')],
             'view_id': tree_view_id,
             'search_view_id': search_id,
             'view_mode': 'list,form',

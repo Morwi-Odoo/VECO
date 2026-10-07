@@ -46,7 +46,7 @@
         <field name="name">Generar Pagos Banco</field>
         <field name="res_model">generar.pagos.banco</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="binding_model_id" ref="om_hr_payroll.model_hr_payslip_run"/>
+        <field name="binding_model_id" ref="hr_payroll.model_hr_payslip_run"/>
         <field name="view_mode">form</field>
         <field name="target">new</field>
     </record>

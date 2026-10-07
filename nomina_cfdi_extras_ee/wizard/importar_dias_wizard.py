@@ -123,7 +123,7 @@ class ImportarDiasWizard(models.TransientModel):
                 else:
                     if not contract_id:
                         raise UserError("Please select Contract. No valid contract found for employee %s."%(payslip.employee_id.name))
-                    inputs_type = self.env['hr.payslip.input.type'].sudo().search([('code','=',code)])
+                    inputs_type = self.env['hr.payslip.input.type'].sudo().search([('code','=',code)], limit=1)
                     if not inputs_type:
                         raise UserError("No se encontró el código a importar para el empleado %s."%(payslip.employee_id.name))
                     if other_inputs:

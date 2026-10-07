@@ -5,7 +5,7 @@ class HrPayslipRun(models.Model):
     _inherit = 'hr.payslip.run'
     
     company_id = fields.Many2one('res.company', string='Company', required=True,
-        default=lambda self: self.env['res.company']._company_default_get())
+        default=lambda self: self.env.company.id)
 	
 class HrPayrollStructure(models.Model):
     _inherit = 'hr.payroll.structure'

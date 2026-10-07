@@ -14,49 +14,56 @@ class ResCompany(models.Model):
     serie_nomina = fields.Char('Serie nomina')
     nomina_mail = fields.Char('Nomina Mail')
     company_cfdi = fields.Boolean(string="CFDI MX")
-    # Campos CFDI compartidos con l10n_mx_traslado
-    nombre_fiscal = fields.Char('Nombre Fiscal')
-    serie_timbrado = fields.Char('Serie Timbrado')
+
+    ######################################### Eliminar campos ###################################################
+    proveedor_timbrado= fields.Selection(
+        selection=[('servidor', _('Principal')),
+                   ('servidor2', _('Respaldo')),],
+        string=_('Servidor de timbrado'), default='servidor'
+    )
+    api_key = fields.Char(string=_('API Key'))
+    modo_prueba = fields.Boolean(string=_('Modo prueba'))
     regimen_fiscal = fields.Selection(
-        selection=[('601', 'General de Ley Personas Morales'),
-                   ('603', 'Personas Morales con Fines no Lucrativos'),
-                   ('605', 'Sueldos y Salarios e Ingresos Asimilados a Salarios'),
-                   ('606', 'Arrendamiento'),
-                   ('607', 'Régimen de Enajenación o Adquisición de Bienes'),
-                   ('608', 'Demás ingresos'),
-                   ('609', 'Consolidación'),
-                   ('610', 'Residentes en el Extranjero sin Establecimiento Permanente en México'),
-                   ('611', 'Ingresos por Dividendos (socios y accionistas)'),
-                   ('612', 'Personas Físicas con Actividades Empresariales y Profesionales'),
-                   ('614', 'Ingresos por intereses'),
-                   ('615', 'Régimen de los ingresos por obtención de premios'),
-                   ('616', 'Sin obligaciones fiscales'),
-                   ('620', 'Sociedades Cooperativas de Producción que optan por diferir sus ingresos'),
-                   ('621', 'Incorporación Fiscal'),
-                   ('622', 'Actividades Agrícolas, Ganaderas, Silvícolas y Pesqueras'),
-                   ('623', 'Opcional para Grupos de Sociedades'),
-                   ('624', 'Coordinados'),
-                   ('625', 'Régimen de las Actividades Empresariales con ingresos a través de Plataformas Tecnológicas'),
-                   ('626', 'Régimen Simplificado de Confianza'),
-                   ('628', 'Hidrocarburos'),
-                   ('629', 'De los Regímenes Fiscales Preferentes y de las Empresas Multinacionales'),
-                   ('630', 'Enajenación de acciones en bolsa de valores')],
-        string='Régimen Fiscal',
+        selection=[('601', _('General de Ley Personas Morales')),
+                   ('603', _('Personas Morales con Fines no Lucrativos')),
+                   ('605', _('Sueldos y Salarios e Ingresos Asimilados a Salarios')),
+                   ('606', _('Arrendamiento')),
+                   ('608', _('Demás ingresos')),
+                   ('609', _('Consolidación')),
+                   ('610', _('Residentes en el Extranjero sin Establecimiento Permanente en México')),
+                   ('611', _('Ingresos por Dividendos (socios y accionistas)')),
+                   ('612', _('Personas Físicas con Actividades Empresariales y Profesionales')),
+                   ('614', _('Ingresos por intereses')),
+                   ('616', _('Sin obligaciones fiscales')),
+                   ('620', _('Sociedades Cooperativas de Producción que optan por diferir sus ingresos')),
+                   ('621', _('Incorporación Fiscal')),
+                   ('622', _('Actividades Agrícolas, Ganaderas, Silvícolas y Pesqueras')),
+                   ('623', _('Opcional para Grupos de Sociedades')),
+                   ('624', _('Coordinados')),
+                   ('628', _('Hidrocarburos')),
+                   ('607', _('Régimen de Enajenación o Adquisición de Bienes')),
+                   ('629', _('De los Regímenes Fiscales Preferentes y de las Empresas Multinacionales')),
+                   ('630', _('Enajenación de acciones en bolsa de valores')),
+                   ('615', _('Régimen de los ingresos por obtención de premios')),
+                   ('625', _('Régimen de las Actividades Empresariales con ingresos a través de Plataformas Tecnológicas')),
+                   ('626', _('Régimen Simplificado de Confianza')),],
+        string=_('Régimen Fiscal'), 
     )
-    proveedor_timbrado = fields.Selection(
-        selection=[('diverza', 'Diverza'), ('solucion_factible', 'Solución Factible')],
-        string='Proveedor Timbrado',
-    )
-    modo_prueba = fields.Boolean('Modo Prueba')
-    archivo_cer = fields.Binary('Archivo CER')
-    archivo_key = fields.Binary('Archivo KEY')
-    contrasena = fields.Char('Contraseña CSD')
-    estado_csd = fields.Char('Estado CSD', readonly=True)
-    fecha_csd = fields.Date('Fecha vencimiento CSD', readonly=True)
-    aviso_csd = fields.Char('Aviso CSD', readonly=True)
-    saldo_timbres = fields.Integer('Saldo Timbres', readonly=True)
-    saldo_alarma = fields.Integer('Saldo Alarma')
-    correo_alarma = fields.Char('Correo Alarma')
+    archivo_cer = fields.Binary(string=_('Archivo .cer'))
+    archivo_key = fields.Binary(string=_('Archivo .key'))
+    contrasena = fields.Char(string=_('Contraseña'))
+    nombre_fiscal = fields.Char(string=_('Razón social'))
+    saldo_timbres =  fields.Float(string=_('Saldo de timbres'), readonly=True)
+    saldo_alarma =  fields.Float(string=_('Alarma timbres'), default=10)
+    correo_alarma =  fields.Char(string=_('Correo de alarma'))
+
+    rfc_patron = fields.Char(string=_('RFC Patrón'))
+    registro_patronal = fields.Char(string=_('Registro patronal'))
+    fecha_csd = fields.Datetime(string=_('Vigencia CSD'), readonly=True)
+    estado_csd =  fields.Char(string=_('Estado CSD'), readonly=True)
+    aviso_csd =  fields.Char(string=_('Aviso vencimiento (días antes)'), default=14)
+    serie_timbrado = fields.Char(string=_('Serie traslado'))
+    ################################################################################################################
 
     @api.onchange('country_id')
     def _get_company_cfdi(self):

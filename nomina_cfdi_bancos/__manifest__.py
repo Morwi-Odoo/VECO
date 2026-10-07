@@ -5,7 +5,7 @@
     "version": "19.1.0",
     "category": "Other",
     "description":"Genera dispersion de bancos para la nómina.",
-    "depends": ["nomina_cfdi_ee",'om_hr_payroll','hr'],
+    "depends": ["nomina_cfdi_ee",'hr_payroll','hr'],
     "data": [
         'security/ir.model.access.csv',
         "wizard/generar_pagos_banco.xml",

@@ -125,7 +125,7 @@ class HrPayslip(models.Model):
                             number_of_days = 15 - leave_days
                       else:
                          number_of_days = work_data_days
-                   elif contract.tipo_pago == '03' and nb_of_days < 17:
+                   elif self.employee_id.tipo_pago == '03' and nb_of_days < 17:
                       total_days = work_data_days + leave_days
                       if total_days != 15.2083 or leave_days != 0:
                          if leave_days == 0  and not nvo_ingreso:

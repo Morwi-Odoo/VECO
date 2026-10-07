@@ -9,11 +9,9 @@ class PurchaseOrder(models.Model):
     _inherit = "purchase.order"
 
     def _prepare_invoice(self):
-        """Prepare the dict of values to create the new invoice for a purchase order.
-        """
         result = super(PurchaseOrder, self)._prepare_invoice()
         move_type = self._context.get('default_move_type', 'in_invoice')
-        journal = self.env['account.move'].with_context(
-            default_move_type=move_type)._get_default_journal()
-        result['journal_id'] = journal.id
+        journals = self.env['account.move']._get_suitable_journal_ids(move_type, self.company_id)
+        if journals:
+            result['journal_id'] = journals[0].id
         return result

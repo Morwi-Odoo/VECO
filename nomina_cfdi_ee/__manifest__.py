@@ -11,7 +11,7 @@
     Nomina CFDI Module
     ''',
     'author': 'IT Admin',
-    'version': '19.2.1',
+    'version': '19.2.2',
     'category': 'Employees',
     'depends': [
         'hr_payroll','account', 'hr_work_entry_holidays', 'hr_work_entry_attendance', 'hr_work_entry_enterprise',
@@ -25,8 +25,8 @@
         'data/nomina.otropago.csv',
         'data/nomina.percepcion.csv',
         'data/nomina.deduccion.csv',
-       # 'data/hr_payroll_data.xml',
-        'data/hr_data.xml',
+        #'data/hr_payroll_data.xml',
+        #'data/hr_data.xml',
         'views/hr_employee_view.xml',
         'views/hr_version_views.xml',
         'views/hr_salary_view.xml',

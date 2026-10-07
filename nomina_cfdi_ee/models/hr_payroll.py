@@ -85,8 +85,6 @@ class HrPayslip(models.Model):
     periodicidad = fields.Char('periodicidad')
     concepto_periodico = fields.Boolean('Conceptos periodicos', default = True)
     aplicar_descuentos = fields.Boolean('Aplicar descuentos', default = True)
-    refunded_id = fields.Many2one('hr.payslip', string='Refunded Payslip', readonly=True)
-    payment_report = fields.Binary('Payment Report', readonly=True)
 
     #imss empleado
     emp_exedente_smg = fields.Float(string='Exedente 3 SMGDF')

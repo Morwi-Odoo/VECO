@@ -355,16 +355,25 @@ class hr_payslip(models.Model):
             if payslip.ultima_nomina:
                 grabado_mensual = payslip.rp_gravado + payslip.acum_per_grav
             else:
-                grabado_mensual = payslip.rp_gravado  / payslip.dias_pagar * payslip.contract_id.tablas_cfdi_id.imss_mes
+                if payslip.dias_pagar > 0:
+                    grabado_mensual = payslip.rp_gravado  / payslip.dias_pagar * payslip.contract_id.tablas_cfdi_id.imss_mes
+                else:
+                    grabado_mensual = 0
 
             lines = payslip.contract_id.env['tablas.general.line'].search([('form_id','=',payslip.contract_id.tablas_cfdi_id.id),('lim_inf','<=',grabado_mensual)],order='lim_inf desc',limit=1)
             if lines:
                 payslip.rp_limite_inferior =  lines.lim_inf
                 payslip.rp_cuota_fija =  lines.c_fija
                 payslip.rp_porcentaje =  lines.s_excedente
+            else:
+                payslip.rp_limite_inferior =  0
+                payslip.rp_cuota_fija =  0
+                payslip.rp_porcentaje =  0
             lines2 = payslip.contract_id.env['tablas.subsidio.line'].search([('form_id','=',payslip.contract_id.tablas_cfdi_id.id),('lim_inf','<=',grabado_mensual)],order='lim_inf desc',limit=1)
             if lines2:
-               payslip.rp_subsidio =  lines2.s_mensual
+                payslip.rp_subsidio =  lines2.s_mensual
+            else:
+                payslip.rp_subsidio =  0
 
 
     @api.onchange('date_to')
@@ -440,6 +449,12 @@ class HrPayslipRun(models.Model):
     
 class HrPayslip(models.Model):
     _inherit = 'hr.payslip'
+
+    refunded_id = fields.Many2one(
+        'hr.payslip',
+        string='Refunded Payslip',
+        readonly=True
+    )
 
     def action_payslip_cancel(self):
         for payslip in self:
