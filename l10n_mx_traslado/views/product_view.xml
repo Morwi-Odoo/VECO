@@ -12,12 +12,12 @@
                              <group>
                                 <field name="clave_stcc" />
                                 <field name="materialpeligroso" />
-                                <field name="clavematpeligroso" attrs="{'invisible':[('materialpeligroso','!=','Sí')]}"/>
+                                <field name="clavematpeligroso" invisible="materialpeligroso != 'Sí'"/>
                              </group>
                              <group>
                                 <field name="dimensiones" />
-                                <field name="embalaje" attrs="{'invisible':[('materialpeligroso','!=','Sí')]}"/>
-                                <field name="desc_embalaje" attrs="{'invisible':[('materialpeligroso','!=','Sí')]}"/>
+                                <field name="embalaje" invisible="materialpeligroso != 'Sí'"/>
+                                <field name="desc_embalaje" invisible="materialpeligroso != 'Sí'"/>
                              </group>
                         </group>
                    </page>

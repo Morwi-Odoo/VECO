@@ -1,7 +1,7 @@
 from odoo import models,_
 from odoo.exceptions import UserError
 from datetime import date, datetime
-from odoo.exceptions import UserError, Warning
+from odoo.exceptions import UserError
 
 class StockPicking(models.Model):
     _inherit = "stock.picking"

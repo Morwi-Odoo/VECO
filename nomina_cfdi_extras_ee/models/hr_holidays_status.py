@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import models, api
-from odoo.exceptions import Warning, UserError
+from odoo.exceptions import UserError
 
 class HrHolidaysStatus(models.Model):
     _inherit = 'hr.leave.type'

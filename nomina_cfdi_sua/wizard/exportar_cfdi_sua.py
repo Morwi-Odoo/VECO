@@ -4,7 +4,7 @@ import base64
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
-from odoo.exceptions import UserError, Warning
+from odoo.exceptions import UserError
 import logging
 _logger = logging.getLogger(__name__)
 
@@ -292,7 +292,7 @@ class exportar_cfdi_sua(models.TransientModel):
                       data7 = '0000000'
                       folioimss = '        '
                       diasincidencia = '00'
-                      if employee.contract_id:
+                      if employee.current_version_id:
                           data7='{:07d}'.format(int(round(rec.sueldo_cotizacion_base,2)*100))
                       file_text.append((employee.registro_patronal_id.registro_patronal[0:11] or '           ')+(employee.segurosocial[0:11] or '           ')+(data3)+(data4)+(folioimss)+(diasincidencia)+data7 + '\r')
 
@@ -373,9 +373,9 @@ class exportar_cfdi_sua(models.TransientModel):
                            nombre = nombre + employee.empleado_nombre
                       nombre = nombre.replace('ñ','¥')
                       nombre= nombre.replace('Ñ','¥')
-                      if employee.contract_id:
+                      if employee.current_version_id:
                           ultimo_sueldo = 0
-                          for sueldos in employee.contract_id.historial_salario_ids:
+                          for sueldos in employee.current_version_id.historial_salario_ids:
                                if sueldos.fecha_sueldo <= self.end_date:
                                   ultimo_sueldo = sueldos.sueldo_base_cotizacion
                           sdi='{:07d}'.format(int(round(ultimo_sueldo,2)*100))
@@ -421,7 +421,7 @@ class exportar_cfdi_sua(models.TransientModel):
                            nombre = nombre + employee.empleado_materno + '$'
                       if employee.empleado_nombre:
                            nombre = nombre + employee.empleado_nombre
-                      if employee.contract_id:
+                      if employee.current_version_id:
                           sdi='{:07d}'.format(int(round(rec.sueldo_cotizacion_base,2)*100))
                       if not employee.job_title:
                          raise UserError(_('No tiene %s puesto configurado') % (employee.name))
@@ -497,7 +497,7 @@ class exportar_cfdi_sua(models.TransientModel):
                       data7 = '0000000'
                       folioimss = '        '
                       diasincidencia = '00'
-                      if employee.contract_id:
+                      if employee.current_version_id:
                           data7='{:07d}'.format(int(round(rec.sueldo_cotizacion_base,2)*100))
                       file_text.append((employee.registro_patronal_id.registro_patronal[0:11] or '           ')+(employee.segurosocial[0:11] or '           ')+(data3)+(data4)+(folioimss)+(diasincidencia)+data7 + '\r')
 

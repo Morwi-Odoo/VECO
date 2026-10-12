@@ -601,12 +601,16 @@
 			</t>
 		</template>
 
-		<report id="report_facturatraslado"
-				model="cfdi.traslado"
-				string="Factura Traslado"
-        		menu="True"
-				report_type="qweb-pdf"
-				name="l10n_mx_traslado.report_facturatraslado1"
-				paperformat="l10n_mx_traslado.paperformat_a4_landscape"/> 
+	<record id="report_facturatraslado" model="ir.actions.report">
+		<field name="name">Factura Traslado</field>
+		<field name="model">cfdi.traslado</field>
+		<field name="report_type">qweb-pdf</field>
+		<field name="report_name">l10n_mx_traslado.report_facturatraslado1</field>
+		<field name="report_file">l10n_mx_traslado.report_facturatraslado1</field>
+		<field name="paperformat_id" ref="l10n_mx_traslado.paperformat_a4_landscape"/>
+		<field name="print_report_name">'Factura de traslado %s' % (object.number)</field>
+		<field name="binding_model_id" ref="model_cfdi_traslado"/>
+		<field name="binding_type">report</field>
+	</record>
 
 </odoo>

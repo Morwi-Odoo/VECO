@@ -8,7 +8,7 @@
        	<group>
        		<field name="todos"/>
        	</group>
-       	<group attrs="{'invisible':[('todos','=',False)]}">
+       	<group invisible="todos == False">
        		<field name="rango_de_empleados1"/>
        		<field name="rango_de_empleados2" string="a"/>
        		<field name="payslip_batch_id" invisible="1"/>
@@ -37,7 +37,7 @@
        	<group>
        		<field name="todos"/>
        	</group>
-       	<group attrs="{'invisible':[('todos','=',False)]}">
+       	<group invisible="todos == False">
        		<field name="rango_de_empleados1"/>
        		<field name="rango_de_empleados2" string="a"/>
        		<field name="payslip_batch_id" invisible="1"/>
@@ -69,7 +69,7 @@
                 <group>
                     <field name="todos"/>
                 </group>
-                <group attrs="{'invisible':[('todos','=',False)]}">
+                <group invisible="todos == False">
                     <field name="rango_de_empleados1"/>
                     <field name="rango_de_empleados2" string="a"/>
                     <field name="payslip_batch_id" invisible="1"/>

@@ -4,14 +4,14 @@
         <field name="name">horas.nomina.tree.view</field>
         <field name="model">horas.nomina</field>
         <field name="arch" type="xml">
-        <tree string="Horas extras">
+        <list string="Horas extras">
         	<field name="name" />
             <field name="employee_id" />
             <field name="fecha" />
             <field name="tipo_de_hora" />
             <field name="horas" />
             <field name="state" /> 
-         </tree> 
+         </list> 
        </field>
     </record>
    <record id="form_horas_nomina_view" model="ir.ui.view">
@@ -21,9 +21,9 @@
         <form string="Horas extras">
              
              <header>
-                 <button name="action_validar" string="Validar" type="object" states="draft" class="btn-primary"/>
-                 <button name="action_cancelar" string="Cancelar" type="object" states="done" confirm="¿Seguro que quiere cancelar el registro?"/>
-                 <button name="action_draft" string="Borrador" type="object" states="cancel"/>
+                 <button name="action_validar" string="Validar" type="object" invisible="state != 'draft'" class="btn-primary"/>
+                 <button name="action_cancelar" string="Cancelar" type="object" invisible="state != 'done'" confirm="¿Seguro que quiere cancelar el registro?"/>
+                 <button name="action_draft" string="Borrador" type="object" invisible="state != 'cancel'"/>
                  <field name="state" widget="statusbar" statusbar_visible="draft,done"/>
              </header>
              <sheet>
@@ -34,12 +34,12 @@
                  </div>
                  <group>
                      <group>
-                         <field name="fecha" attrs="{'readonly' : [('state', '!=','draft')], 'required': [('state', '=','draft')]}"/>
-                         <field name="tipo_de_hora" attrs="{'readonly' : [('state', '!=','draft')], 'required': [('state', '=','draft')]}"/>
-                         <field name="employee_id" attrs="{'readonly' : [('state', '!=','draft')], 'required': [('state', '=','draft')]}"/>
+                         <field name="fecha" readonly="state != 'draft'" required="state == 'draft'"/>
+                         <field name="tipo_de_hora" readonly="state != 'draft'" required="state == 'draft'"/>
+                         <field name="employee_id" readonly="state != 'draft'" required="state == 'draft'"/>
                      </group>
                      <group>
-                         <field name="horas" attrs="{'readonly' : [('state', '!=','draft')]}"/>
+                         <field name="horas" readonly="state != 'draft'"/>
                      	<field name="company_id" groups="base.group_multi_company"/>
                      </group>
                  </group>
@@ -64,7 +64,7 @@
     <record id="action_tree_horas_nomina" model="ir.actions.act_window">
         <field name="name">Horas</field>
         <field name="res_model">horas.nomina</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="view_id" ref="tree_horas_nomina_view" />
         <field name="search_view_id" ref="search_horas_nomina_view" />
         <field name="context">{}</field>

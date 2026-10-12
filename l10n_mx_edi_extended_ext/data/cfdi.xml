@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <template id="cfdiv40_extended_desc_especifica" inherit_id="l10n_mx_edi_extended.cfdiv40_extended">
+            <xpath expr="//*[name()='cce20:Mercancia']" position="inside">
+                <t t-foreach="mercancia.get('desc_especifica', [])" t-as="info_merc">
+                    <cce20:DescripcionesEspecificas
+                        xmlns:cce20="http://www.sat.gob.mx/ComercioExterior20"
+                        t-att-Marca="info_merc['Marca']"
+                        t-att-Modelo="info_merc['Modelo']"
+                        t-att-SubModelo="info_merc['SubModelo']"
+                        t-att-NumeroSerie="info_merc['NumeroSerie']"/>
+                </t>
+            </xpath>
+        </template>
+
+    </data>
+</odoo>

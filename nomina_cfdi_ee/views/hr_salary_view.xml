@@ -10,25 +10,25 @@
                         <group cols="4">
                             <group string="Código SAT">
                                <field name="category_code" invisible="1"/>
-                               <field name="tipo_cpercepcion" attrs="{'invisible':[('category_code','not in',['BASIC','ALW','ALW2'])]}" />
-                               <field name="tipo_cdeduccion" attrs="{'invisible':[('category_code','not in',['DED'])]}"/>
-                               <field name="tipo_cotro_pago" attrs="{'invisible':[('category_code','not in',['ALW3'])]}"/>
+                               <field name="tipo_cpercepcion" invisible="category_code not in ('BASIC', 'ALW', 'ALW2')" />
+                               <field name="tipo_cdeduccion" invisible="category_code not in ('DED',)"/>
+                               <field name="tipo_cotro_pago" invisible="category_code not in ('ALW3',)"/>
                             </group>
                             <group string="Forma de pago">
                                <field name="forma_pago" />
-                               <field name="cuenta_especie" attrs="{'invisible':[('forma_pago','in','001')]}"/>
-                                <field name="fondo_ahorro_aux" attrs="{'invisible':[('category_code','not in',['AUX'])]}"/>
+                               <field name="cuenta_especie" invisible="forma_pago in '001'"/>
+                                <field name="fondo_ahorro_aux" invisible="category_code not in ('AUX',)"/>
                             </group>
                             <group string="Exención de ISR">
                                 <field name="exencion"/>
-                                <field name="parte_exenta" attrs="{'invisible':[('exencion','=',False)]}"/>
-                                <field name="parte_gravada" attrs="{'invisible':[('exencion','=',False)]}"/>
-                                <field name="integrar_al_ingreso" attrs="{'invisible':[('exencion','=',False)]}"/>
+                                <field name="parte_exenta" invisible="exencion == False"/>
+                                <field name="parte_gravada" invisible="exencion == False"/>
+                                <field name="integrar_al_ingreso" invisible="exencion == False"/>
                             </group>
                             <group  string="Percepcion variable para el IMSS">
                                 <field name="variable_imss"/>
-                                <field name="variable_imss_tipo" attrs="{'invisible':[('variable_imss','=',False)]}"/>
-                                <field name="variable_imss_monto" attrs="{'invisible':[('variable_imss','=',False)]}"/>
+                                <field name="variable_imss_tipo" invisible="variable_imss == False"/>
+                                <field name="variable_imss_monto" invisible="variable_imss == False"/>
                             </group>
                             <group  string="Otros">
                                 <field name="integrar_ptu"/>

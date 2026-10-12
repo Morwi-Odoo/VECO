@@ -7,7 +7,7 @@
            <field name="inherit_id" ref="nomina_cfdi_ee.hr_payslip_run_form_nomina_cfdi"/>
            <field name="arch" type="xml">
            	 <xpath expr="//field[@name='mes']" position="after">
-           			<field name="company_id" groups="base.group_multi_company" attrs="{'readonly': False}"/>
+           			<field name="company_id" groups="base.group_multi_company" readonly="False"/>
           		 </xpath> 
 					
             </field>

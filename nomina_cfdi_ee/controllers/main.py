@@ -7,13 +7,10 @@ from io import BytesIO
 from odoo import http
 from odoo.http import request
 
-from odoo.addons.web.controllers.main import serialize_exception, content_disposition
-
 
 class BinaryCDFIInvoice(http.Controller):
 
     @http.route('/payroll/download_document', type='http', auth="public")
-    @serialize_exception
     def download_document(self, id=None, **kw):
         if id:
             payslip = request.env['hr.payslip.run'].browse(int(id))

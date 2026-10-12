@@ -11,10 +11,10 @@
                             <group string="Detalles de Pago">
                                 <field name="no_empleado"/>
                                 <field name="tipo_pago"/>
-                                <field name="banco" attrs="{'invisible':[('tipo_pago','not in',('transferencia','deposito'))]}"/>
-                                <field name="no_cuenta"  attrs="{'invisible':[('tipo_pago','not in',('transferencia','deposito'))]}"/>
-                                <field name="tipo_cuenta"  attrs="{'invisible':[('tipo_pago','not in',('transferencia','deposito'))]}"/>
-                                <field name="diario_pago" attrs="{'invisible':[('tipo_pago','not in',('transferencia','deposito'))]}"/>
+                                <field name="banco" invisible="tipo_pago not in ('transferencia', 'deposito')"/>
+                                <field name="no_cuenta"  invisible="tipo_pago not in ('transferencia', 'deposito')"/>
+                                <field name="tipo_cuenta"  invisible="tipo_pago not in ('transferencia', 'deposito')"/>
+                                <field name="diario_pago" invisible="tipo_pago not in ('transferencia', 'deposito')"/>
                             </group>
                             <group string="Información fiscal">
                                 <field name="regimen"/>

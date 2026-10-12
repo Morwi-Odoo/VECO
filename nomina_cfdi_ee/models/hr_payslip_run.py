@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, models, fields, _
-from datetime import datetime, date
+from datetime import datetime, date, time
 from dateutil.relativedelta import relativedelta
 from calendar import monthrange
 import logging
@@ -9,10 +9,97 @@ _logger = logging.getLogger(__name__)
 from odoo.exceptions import UserError
 import io
 import base64
+import pytz
 
 class HrPayslipRun(models.Model):
     _inherit = 'hr.payslip.run'
-    
+
+    def generate_payslips(self, version_ids=None, employee_ids=None):
+        # EXTENDS 'hr_payroll' - ports the old nomina_cfdi_ee hr.payslip.employees wizard
+        # (removed in 19.0, replaced by this method) so that the batch's own CFDI fields
+        # (dias_pagar, imss_mes, periodicidad_pago, tipo_nomina, ...) seed every payslip
+        # it generates. Can't call super() and patch afterwards: compute_sheet() runs
+        # inside the native method, so these fields must already be set before that call.
+        self.ensure_one()
+
+        if employee_ids and not version_ids:
+            version_ids = self._get_valid_version_ids(employee_ids=employee_ids)
+
+        if not version_ids:
+            raise UserError(_("You must select employee(s) version(s) to generate payslip(s)."))
+
+        valid_versions = self.env["hr.version"].browse(version_ids)
+
+        Payslip = self.env['hr.payslip']
+
+        if self.estructura:
+            valid_versions = valid_versions.filtered(lambda c: c.structure_type_id.id == self.estructura.type_id.id)
+        valid_versions.generate_work_entries(self.date_start, self.date_end)
+
+        all_work_entries = dict(self.env['hr.work.entry']._read_group(
+            domain=[
+                ('employee_id', 'in', valid_versions.employee_id.ids),
+                ('date', '<=', self.date_end),
+                ('date', '>=', self.date_start),
+            ],
+            groupby=['version_id'],
+            aggregates=['id:recordset'],
+        ))
+
+        utc = pytz.utc
+        for tz, slips_per_tz in self.slip_ids.grouped(lambda s: s.version_id.tz).items():
+            slip_tz = pytz.timezone(tz or utc)
+            for slip in slips_per_tz:
+                date_from = slip_tz.localize(datetime.combine(slip.date_from, time.min)).astimezone(utc).replace(tzinfo=None)
+                date_to = slip_tz.localize(datetime.combine(slip.date_to, time.max)).astimezone(utc).replace(tzinfo=None)
+                if version_work_entries := all_work_entries.get(slip.version_id):
+                    version_work_entries.filtered_domain([
+                        ('date', '<=', date_to),
+                        ('date', '>=', date_from),
+                    ])
+                    version_work_entries._check_undefined_slots(slip.date_from, slip.date_to)
+
+        for work_entries in all_work_entries.values():
+            work_entries = work_entries.filtered(lambda we: we.state != 'validated')
+            if work_entries._check_if_error():
+                work_entries = work_entries.filtered(lambda we: we.state == 'conflict')
+                conflicts = work_entries._to_intervals()
+                time_intervals_str = "".join(
+                    f"\n - {start} -> {end} ({entry.employee_id.name})" for start, end, entry in conflicts._items)
+                raise UserError(self.env._("Some work entries could not be validated. Time intervals to look for:%s", time_intervals_str))
+
+        default_values = Payslip.default_get(Payslip.fields_get())
+        payslips_vals = []
+        for version in valid_versions[::-1]:
+            values = default_values | {
+                'name': self.env._('New Payslip'),
+                'employee_id': version.employee_id.id,
+                'payslip_run_id': self.id,
+                'date_from': self.date_start,
+                'date_to': self.date_end,
+                'version_id': version.id,
+                'company_id': self.company_id.id,
+                'struct_id': self.estructura.id or version.structure_type_id.default_struct_id.id,
+                'dias_pagar': self.dias_pagar,
+                'imss_mes': self.imss_mes,
+                'imss_dias': self.imss_dias,
+                'ultima_nomina': self.ultima_nomina,
+                'mes': self.mes,
+                'isr_ajustar': self.isr_ajustar,
+                'isr_anual': self.isr_anual,
+                'concepto_periodico': self.concepto_periodico,
+                'tipo_nomina': self.tipo_nomina,
+                'fecha_pago': self.fecha_pago,
+            }
+            payslips_vals.append(values)
+        self.slip_ids |= Payslip.with_context(tracking_disable=True).create(payslips_vals)
+        self.slip_ids._compute_name()
+        self.slip_ids.compute_sheet()
+        self.state = '01_ready'
+
+        return 1
+
+
     def action_confirmar_nomina(self):
         for rec in self:
             slip_ids = rec.slip_ids.filtered(lambda r: r.state == 'draft')
@@ -21,7 +108,7 @@ class HrPayslipRun(models.Model):
 
     def action_cancelar_nomina(self):
         for rec in self:
-            slip_ids = rec.slip_ids.filtered(lambda r: r.state == 'done')
+            slip_ids = rec.slip_ids.filtered(lambda r: r.state == 'validated')
             for slip_id in slip_ids:
                 slip_id.action_payslip_cancel()
 
@@ -197,7 +284,7 @@ class HrPayslipRun(models.Model):
                     if payslip.state == 'draft':
                         payslip.compute_sheet()
             else:
-                if payslip.state in ['draft','verify']:
+                if payslip.state == 'draft':
                     payslip.compute_sheet()
         return True
      
@@ -205,7 +292,7 @@ class HrPayslipRun(models.Model):
     def _compute_payslip_cgdi_generated(self):
         cfdi_generated = True
         for payslip in self.slip_ids:
-            if payslip.state in ['draft','verify'] or not payslip.nomina_cfdi:
+            if payslip.state == 'draft' or not payslip.nomina_cfdi:
                 cfdi_generated=False
                 break
         self.all_payslip_generated = cfdi_generated 
@@ -215,7 +302,7 @@ class HrPayslipRun(models.Model):
     def _compute_payslip_cgdi_generated_draft(self):
         cfdi_generated_draft = True
         for payslip in self.slip_ids:
-            if payslip.state not in ['draft','verify']:
+            if payslip.state != 'draft':
                 cfdi_generated_draft=False
                 break
         self.all_payslip_generated_draft = cfdi_generated_draft 
@@ -277,10 +364,10 @@ class HrPayslipRun(models.Model):
             if start_range and end_range:
                 emp_no = int(payslip.employee_id.no_empleado)
                 if emp_no >= start_range and emp_no <= end_range:
-                    if payslip.state in ['draft','verify']:
+                    if payslip.state == 'draft':
                         payslip.action_payslip_done()
             else:
-                if payslip.state in ['draft','verify']:
+                if payslip.state == 'draft':
                    payslip.action_payslip_done()
         return
 

@@ -33,12 +33,13 @@ class AutoTransporte(models.Model):
                         'company_id': company.id,
                     })
 
-    @api.model
-    def create(self, vals):
-        if vals.get('name', _('New')) == _('New'):
-            if 'company_id' in vals:
-                vals['name'] = self.env['ir.sequence'].with_context(force_company=vals['company_id']).next_by_code('ccp.autotransporte') or _('New')
-            else:
-                vals['name'] = self.env['ir.sequence'].next_by_code('ccp.autotransporte') or _('New')
-        result = super(AutoTransporte, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('name', _('New')) == _('New'):
+                if 'company_id' in vals:
+                    vals['name'] = self.env['ir.sequence'].with_context(force_company=vals['company_id']).next_by_code('ccp.autotransporte') or _('New')
+                else:
+                    vals['name'] = self.env['ir.sequence'].next_by_code('ccp.autotransporte') or _('New')
+        result = super(AutoTransporte, self).create(vals_list)
         return result

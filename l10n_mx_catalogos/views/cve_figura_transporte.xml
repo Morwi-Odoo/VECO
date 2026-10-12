@@ -4,10 +4,10 @@
       <field name="name">cve.figura.transporte.tree</field>
       <field name="model">cve.figura.transporte</field>
       <field name="arch" type="xml">
-        <tree>
+        <list>
           <field name="clave"/>
           <field name="descripcion"/>
-        </tree>
+        </list>
       </field>
     </record>
 
@@ -31,7 +31,7 @@
       <record id="action_catalogos_figura_transporte" model="ir.actions.act_window">
         <field name="name">Catálogo de CVE Figura Transporte</field>
         <field name="res_model">cve.figura.transporte</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
       </record>
 
       <menuitem id="catalogos_menu_cve_figura_transporte" name="CVE Figura Transporte" parent="catalogos_traslado_menu_principal" action="action_catalogos_figura_transporte"/>

@@ -2,7 +2,7 @@
 from odoo import models, fields, _, api
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from odoo.exceptions import Warning, UserError
+from odoo.exceptions import UserError
 import pytz
 from odoo import tools
 

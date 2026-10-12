@@ -8,7 +8,7 @@
        	<group>
        		<field name="todos"/>
        	</group>
-       	<group attrs="{'invisible':[('todos','=',False)]}">
+       	<group invisible="todos == False">
        		<field name="rango_de_empleados1"/>
        		<field name="rango_de_empleados2" string="a"/>
        		

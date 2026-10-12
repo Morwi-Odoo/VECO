@@ -8,26 +8,26 @@
                 <form string="CFDI Traslado">
                    <header>
                         <field name="factura_cfdi" invisible="1"/>
-                        <button name="action_valid" type="object" states="draft" string="Validar" class="oe_highlight"/>
-                        <button name="action_set_draft" type="object" states="cancel" string="Cambiar a borrador" class="oe_highlight"/>
-                        <button name="action_cancel" string="Cancelar" type="object" attrs="{'invisible':[('state','in',['draft','cancel'])]}"/>
+                        <button name="action_valid" type="object" invisible="state != 'draft'" string="Validar" class="oe_highlight"/>
+                        <button name="action_set_draft" type="object" invisible="state != 'cancel'" string="Cambiar a borrador" class="oe_highlight"/>
+                        <button name="action_cancel" string="Cancelar" type="object" invisible="state in ('draft', 'cancel')"/>
                         <button name="action_cfdi_generate" type="object" string="Generar CFDI" 
-                            attrs="{'invisible':['|',('factura_cfdi','=',True), ('state','not in',('valid'))]}"
+                            invisible="state not in 'valid' or factura_cfdi == True"
                             class="oe_highlight" groups="base.group_user"/>
                     <button name="%(l10n_mx_traslado.reason_cancelation_sat_wizard)d"
                             type="action" 
                             string="Cancelar CFDI" 
-                            attrs="{'invisible':['|',('factura_cfdi','=',False), ('estado_factura','in',('solicitud_cancelar', 'factura_cancelada', 'solicitud_rechazada'))]}" 
+                            invisible="estado_factura in ('solicitud_cancelar', 'factura_cancelada', 'solicitud_rechazada') or factura_cfdi == False" 
                             class="oe_highlight" 
                             groups="base.group_user"/>
                             <!--<button name="action_cfdi_rechazada"
                             type="object" 
                             string="Cambiar estado CFDI a factura correcta" 
-                            attrs="{'invisible':['|',('factura_cfdi','=',False), ('estado_factura','not in',('solicitud_rechazada'))]}" 
+                            invisible="estado_factura not in 'solicitud_rechazada' or factura_cfdi == False" 
                             class="oe_highlight" 
                             groups="base.group_user"
                             confirm="La factura va pasar a estado correcto y puede intentar cancelar nuevamente."/>-->
-                        <button name="send_factura_mail" class="oe_highlight" attrs="{'invisible':[('estado_factura','=','factura_no_generada')]}" string="Enviar por correo-e" type="object"/>
+                        <button name="send_factura_mail" class="oe_highlight" invisible="estado_factura == 'factura_no_generada'" string="Enviar por correo-e" type="object"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,valid,cancel" />
                    </header>
                    <sheet>
@@ -38,19 +38,19 @@
                    </div>
                    <group>
                     <group>
-                        <field name="partner_id" attrs="{'readonly':[('state','=','valid')]}"/>
-                        <field name="source_document" attrs="{'readonly':[('state','=','valid')]}"/>
+                        <field name="partner_id" readonly="state == 'valid'"/>
+                        <field name="source_document" readonly="state == 'valid'"/>
                     </group>
                     <group>
-                        <field name="invoice_date" attrs="{'readonly':[('state','=','valid')]}"/>
-                        <field name="tipo_transporte" attrs="{'readonly':[('state','=','valid')]}"/>
-                        <field name="carta_porte" attrs="{'readonly':[('state','=','valid')]}"/>
+                        <field name="invoice_date" readonly="state == 'valid'"/>
+                        <field name="tipo_transporte" readonly="state == 'valid'"/>
+                        <field name="carta_porte" readonly="state == 'valid'"/>
                     </group>
                     </group>
                     <notebook>
                         <page name="invoice_line_factura" string="Mercancía a trasladar">
-                            <field name="factura_line_ids" attrs="{'readonly':[('state','=','valid')]}">
-                            <tree editable="bottom">
+                            <field name="factura_line_ids" readonly="state == 'valid'">
+                            <list editable="bottom">
                                 <control>
                                    <create string="Agregar línea"/>
                                 </control>
@@ -63,7 +63,7 @@
                                 <field name="pesoenkg"/>
                                 <field name="invoice_line_tax_ids" widget="many2many_tags" invisible="1"/>
                                 <field name="price_subtotal" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                            </tree>
+                            </list>
                             </field> 
                             <group class="oe_subtotal_footer oe_right">
                                 <field name="currency_id" invisible="1"/>
@@ -76,56 +76,56 @@
                         <page name="info_adicional" string="Información Adicional">
                             <group cols="4">
                                 <group string="Detalles de Pago">
-                                    <field name="company_id" attrs="{'readonly':[('state','=','valid')]}"/>
-                                    <field name="journal_id" attrs="{'readonly':[('state','=','valid')]}"/>
+                                    <field name="company_id" readonly="state == 'valid'"/>
+                                    <field name="journal_id" readonly="state == 'valid'"/>
                                    <!--<field name="pricelist_id"/>-->
-                                    <field name="currency_id" string="Moneda" attrs="{'readonly':[('state','=','valid')]}"/>
+                                    <field name="currency_id" string="Moneda" readonly="state == 'valid'"/>
                                 </group>
                             </group>
                         </page>
                         <page name="info_cdfi" string="CFDI">
                             <group cols="4">
                                 <group string="Detalles de Pago">
-                                    <field name="forma_pago" invisible="1" attrs="{'readonly':[('state','=','valid')]}"/>
-                                    <field name="methodo_pago" invisible="1" attrs="{'readonly':[('state','=','valid')]}"/>
-                                    <field name="uso_cfdi" readonly="True" attrs="{'readonly':[('state','=','valid')]}"/>
+                                    <field name="forma_pago" invisible="1" readonly="state == 'valid'"/>
+                                    <field name="methodo_pago" invisible="1" readonly="state == 'valid'"/>
+                                    <field name="uso_cfdi" readonly="True"/>
                                 </group>
                                 <group  string="Detalles de Factura">
-                                    <field name="tipo_comprobante" readonly="True" default="T" attrs="{'readonly':[('state','=','valid')]}"/>
+                                    <field name="tipo_comprobante" readonly="True" default="T"/>
                                     <field name="folio_fiscal" readonly="True"/>
-                                    <field name="confirmacion" attrs="{'readonly':[('state','=','valid')]}"/>
+                                    <field name="confirmacion" readonly="state == 'valid'"/>
                                     <field name="estado_factura"/>
-                                    <field name="fecha_factura" attrs="{'readonly':[('state','=','valid')]}"/>
+                                    <field name="fecha_factura" readonly="state == 'valid'"/>
                                     <field name="proceso_timbrado"/>
                                 </group>
                                 <group  string="CFDI Relacionados">
-                                    <field name="tipo_relacion" attrs="{'readonly':[('state','=','valid')]}"/>
-                                    <field name="uuid_relacionado" attrs="{'readonly':[('state','=','valid')]}"/>
+                                    <field name="tipo_relacion" readonly="state == 'valid'"/>
+                                    <field name="uuid_relacionado" readonly="state == 'valid'"/>
                                 </group>
                             </group>
                         </page>
 
-                        <page name="carta_porte" string="Carta Porte" attrs="{'invisible': [('carta_porte','=',False)]}">
+                        <page name="carta_porte" string="Carta Porte" invisible="carta_porte == False">
                             <group cols="4">
                                 <group string="Atributos de carta porte">
-                                    <field name="transpinternac" attrs="{'readonly':[('state','=','valid')]}"/>
-                                    <field name="entradasalidamerc" attrs="{'readonly':[('state','=','valid')], 'invisible': [('transpinternac','!=','Sí')]}"/>
-                                    <field name="viaentradasalida" attrs="{'readonly':[('state','=','valid')], 'invisible': [('transpinternac','!=','Sí')]}"/>
-                                    <!--<field name="totaldistrec" attrs="{'readonly':[('state','=','valid')]}"/>-->
-                                    <field name="uuidcomercioext" attrs="{'readonly':[('state','=','valid')], 'invisible': ['|', ('transpinternac','!=','Sí'), ('entradasalidamerc','!=','salida')]}"/>
-                                    <field name="paisorigendestino" attrs="{'readonly':[('state','=','valid')], 'invisible': [('transpinternac','!=','Sí')]}"/>
+                                    <field name="transpinternac" readonly="state == 'valid'"/>
+                                    <field name="entradasalidamerc" readonly="state == 'valid'" invisible="transpinternac != 'Sí'"/>
+                                    <field name="viaentradasalida" readonly="state == 'valid'" invisible="transpinternac != 'Sí'"/>
+                                    <!--<field name="totaldistrec" readonly="state == 'valid'"/>-->
+                                    <field name="uuidcomercioext" readonly="state == 'valid'" invisible="entradasalidamerc != 'salida' or transpinternac != 'Sí'"/>
+                                    <field name="paisorigendestino" readonly="state == 'valid'" invisible="transpinternac != 'Sí'"/>
                                 </group>
                                 <group string="Atributos de mercancias">
-                                    <field name="pesobrutototal" attrs="{'readonly':[('state','=','valid')]}"/>
-                                    <field name="unidadpeso" attrs="{'readonly':[('state','=','valid')]}"/>
-                                    <field name="pesonetototal" attrs="{'readonly':[('state','=','valid')]}"/>
-                                    <field name="numerototalmercancias" attrs="{'readonly':[('state','=','valid')]}"/>
+                                    <field name="pesobrutototal" readonly="state == 'valid'"/>
+                                    <field name="unidadpeso" readonly="state == 'valid'"/>
+                                    <field name="pesonetototal" readonly="state == 'valid'"/>
+                                    <field name="numerototalmercancias" readonly="state == 'valid'"/>
                                 </group>
                             </group>
                         </page>
-                        <page name="ccp_ubicaciones" string="Ubicaciones" attrs="{'invisible': [('carta_porte','=',False)]}">
-                          <field name="ubicaciones_line_ids" attrs="{'readonly':[('state','=','valid')]}" context="{'default_tipo_transporte' : tipo_transporte}">
-                            <tree editable="bottom">
+                        <page name="ccp_ubicaciones" string="Ubicaciones" invisible="carta_porte == False">
+                          <field name="ubicaciones_line_ids" readonly="state == 'valid'" context="{'default_tipo_transporte' : tipo_transporte}">
+                            <list editable="bottom">
                                 <control>
                                     <create string="Agregar línea"/>
                                 </control>
@@ -133,64 +133,64 @@
                                 <field name="tipoubicacion" />
                                 <field name="contacto" />
                                 <field name="fecha" />
-                                <field name="tipoestacion" attrs="{'invisible': [('tipo_transporte','==','01')] }"/>
-                                <field name="numestacion" attrs="{'invisible': [('tipo_transporte','==','01')] }"/>
-                                <field name="distanciarecorrida" attrs="{'invisible': [('tipo_transporte','!=','01')] }"/>
-                            </tree>
+                                <field name="tipoestacion" invisible="tipo_transporte == '01'"/>
+                                <field name="numestacion" invisible="tipo_transporte == '01'"/>
+                                <field name="distanciarecorrida" invisible="tipo_transporte != '01'"/>
+                            </list>
                           </field>
                         </page>
-                        <page name="ccp_autotransporte" string="Datos de transporte" attrs="{'invisible': [('carta_porte','=',False)]}">
+                        <page name="ccp_autotransporte" string="Datos de transporte" invisible="carta_porte == False">
                             <group cols="4">
                                 <group string="Generales">
-                                    <field name="permisosct" attrs="{'readonly':[('state','=','valid')]}"/>
-                                    <field name="numpermisosct" attrs="{'readonly':[('state','=','valid')]}"/>
+                                    <field name="permisosct" readonly="state == 'valid'"/>
+                                    <field name="numpermisosct" readonly="state == 'valid'"/>
                                 </group>
                                 <group>
                                 </group>
-                                <group string="Autotransporte"  attrs="{'invisible':[('tipo_transporte','!=','01')]}">
-                                    <field name="autotrasporte_ids" attrs="{'readonly':[('state','=','valid')]}"/>
+                                <group string="Autotransporte"  invisible="tipo_transporte != '01'">
+                                    <field name="autotrasporte_ids" readonly="state == 'valid'"/>
                                 </group>
-                                <group attrs="{'invisible':[('tipo_transporte','!=','01')]}">
-                                    <field name="remolque_line_ids" attrs="{'readonly':[('state','=','valid')]}">
-                                        <tree editable="bottom">
+                                <group invisible="tipo_transporte != '01'">
+                                    <field name="remolque_line_ids" readonly="state == 'valid'">
+                                        <list editable="bottom">
                                             <control>
                                                <create string="Agregar línea"/>
                                             </control>
                                            <field name="subtipo_id" />
                                            <field name="placa" />
-                                        </tree>
+                                        </list>
                                     </field>
                                 </group>
-                                <group string="Seguro de mercancías" attrs="{'invisible':[('tipo_transporte','!=','01')]}">
-                                    <field name="nombreaseg_merc" attrs="{'readonly':[('state','=','valid')]}"/>
-                                    <field name="numpoliza_merc" attrs="{'readonly':[('state','=','valid')]}"/>
-                                    <field name="primaseguro_merc" attrs="{'readonly':[('state','=','valid')]}"/>
+                                <group string="Seguro de mercancías" invisible="tipo_transporte != '01'">
+                                    <field name="nombreaseg_merc" readonly="state == 'valid'"/>
+                                    <field name="numpoliza_merc" readonly="state == 'valid'"/>
+                                    <field name="primaseguro_merc" readonly="state == 'valid'"/>
                                 </group>
-                                <group string="Seguro medioambiental" attrs="{'invisible':[('tipo_transporte','!=','01')]}">
-                                    <field name="seguro_ambiente" attrs="{'readonly':[('state','=','valid')]}"/>
-                                    <field name="poliza_ambiente" attrs="{'readonly':[('state','=','valid')]}"/>
+                                <group string="Seguro medioambiental" invisible="tipo_transporte != '01'">
+                                    <field name="seguro_ambiente" readonly="state == 'valid'"/>
+                                    <field name="poliza_ambiente" readonly="state == 'valid'"/>
                                 </group>
-                                <group string="Aereo"  attrs="{'invisible':[('tipo_transporte','!=','03')]}">
-                                    <field name="numeroguia" attrs="{'readonly':[('state','=','valid')]}"/>
-                                    <field name="lugarcontrato" attrs="{'readonly':[('state','=','valid')]}"/>
-                                    <field name="transportista_id" attrs="{'readonly':[('state','=','valid')]}"/>
-                                    <field name="embarcador_id" attrs="{'readonly':[('state','=','valid')]}"/>
-                                    <field name="matriculaaeronave" attrs="{'readonly':[('state','=','valid')]}"/>
-                                    <field name="cargoportasacion" attrs="{'readonly':[('state','=','valid')]}"/>
+                                <group string="Aereo"  invisible="tipo_transporte != '03'">
+                                    <field name="numeroguia" readonly="state == 'valid'"/>
+                                    <field name="lugarcontrato" readonly="state == 'valid'"/>
+                                    <field name="transportista_id" readonly="state == 'valid'"/>
+                                    <field name="embarcador_id" readonly="state == 'valid'"/>
+                                    <field name="matriculaaeronave" readonly="state == 'valid'"/>
+                                    <field name="cargoportasacion" readonly="state == 'valid'"/>
                                 </group>
                             </group>
                         </page>
-                        <page name="ccp_figuratrans" string="Figura transporte" attrs="{'invisible': [('carta_porte','=',False)]}">
+                        <page name="ccp_figuratrans" string="Figura transporte" invisible="carta_porte == False">
                                 <group string="Figura transporte">
-                                    <field name="figuratransporte_ids" attrs="{'readonly':[('state','=','valid')]}">
-                                        <tree editable="bottom">
+                                    <field name="figuratransporte_ids" readonly="state == 'valid'">
+                                        <list editable="bottom">
                                             <control>
                                                <create string="Agregar línea"/>
                                             </control>
                                            <field name="tipofigura" />
                                            <field name="figura_id" />
                                            <field name="partetransporte" widget="many2many_tags"/>
-                                        </tree>
+                                        </list>
                                     </field>
                                 </group>
                         </page>
@@ -209,7 +209,7 @@
             <field name="name">CFDI Traslado tree</field>
             <field name="model">cfdi.traslado</field>
             <field name="arch" type="xml">
-                <tree string="CFDI Traslado" default_order="invoice_date desc">
+                <list string="CFDI Traslado" default_order="invoice_date desc">
                 	<field name="currency_id" invisible="1"/>
                    	<field name="partner_id" string="Cliente"/>
                     <field name="invoice_date" string="Fecha de factura"/>
@@ -218,14 +218,14 @@
                     <field name="amount_total" sum="amount total" widget="monetary" options="{'currency_field': 'currency_id'}" string="Cantidad total"/>
                     <field name="estado_factura" string="Estado factura"/>
                     <field name="state" string="Estado"/>
-                </tree>
+                </list>
             </field>
         </record>
     	 <record id="action_fatura_global_tree" model="ir.actions.act_window">
             <field name="name">CFDI Traslado</field>
             <field name="res_model">cfdi.traslado</field>
             <!--<field name="view_type">form</field>-->
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">list,form</field>
             <field name="view_id" ref="view_fatura_global_tree"/>
         </record>
     	<menuitem id="customer_sub_menu_factura_global" name="CFDI Traslado" action="action_fatura_global_tree" parent="account.menu_finance_receivables" sequence="111"/>

@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='time_ids']/list/field[last()]" position="after">
                 <field name="workforce_entry_id" invisible="1"/>
-            	<button name="get_account_move" class="oe_highlight" type="object" string="View Journal Entry" attrs="{'invisible': [('workforce_entry_id', '=', False)]}"/>
+            	<button name="get_account_move" class="oe_highlight" type="object" string="View Journal Entry" invisible="workforce_entry_id == False"/>
             </xpath>
             <xpath expr="//field[@name='duration']" position="attributes">
                 <attribute name="widget">float_time</attribute>

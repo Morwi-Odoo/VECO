@@ -3,9 +3,9 @@
       <field name="name">cve.autorizacion.naviera.tree</field>
       <field name="model">cve.autorizacion.naviera</field>
       <field name="arch" type="xml">
-        <tree>
+        <list>
           <field name="autorizacion_naviera"/>
-        </tree>
+        </list>
       </field>
     </record>
 
@@ -28,7 +28,7 @@
       <record id="action_catalogos_autorizacion_naviera" model="ir.actions.act_window">
         <field name="name">Catálogo de CVE Autorización Naviera</field>
         <field name="res_model">cve.autorizacion.naviera</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
       </record>
 
       <menuitem id="catalogos_menu_cve_autorizacion_naviera" name="CVE Autorización Naviera" parent="catalogos_traslado_menu_principal" action="action_catalogos_autorizacion_naviera"/>

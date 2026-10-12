@@ -9,7 +9,7 @@
     "author": "IT Admin",
     "website": "",
     "category": "Hidden",
-    "depends": ["hr_contract","hr_payroll", "nomina_cfdi_ee"],
+    "depends": ["hr_payroll", "nomina_cfdi_ee"],
     "data": [
          #    "security/security.xml",
              "views/hr_payslip_view.xml",

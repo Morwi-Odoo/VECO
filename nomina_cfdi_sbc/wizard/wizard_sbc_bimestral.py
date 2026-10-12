@@ -156,9 +156,9 @@ class CalculoSBC(models.TransientModel):
             init_row = row
             total_gravado = 0
             dias_periodo = 0
-            if not employee.contract_id:
+            if not employee.current_version_id:
                 continue
-            contrato = employee.contract_id[0]
+            contrato = employee.current_version_id
             date1 = datetime(day=self.segundo_fecha_fin.day, month=self.segundo_fecha_fin.month, year=self.segundo_fecha_fin.year) + timedelta(days=1)
             date2 = datetime(day=contrato.date_start.day, month=contrato.date_start.month, year=contrato.date_start.year)
             no_dias = date1- date2
@@ -299,9 +299,9 @@ class CalculoSBC(models.TransientModel):
         if self.total_empleados:
            for empleado2 in new_employees:
                #_logger.info('lista nva %s', empleado2.name)
-               if not empleado2.contract_id:
+               if not empleado2.current_version_id:
                    continue
-               contrato = empleado2.contract_id[0]
+               contrato = empleado2.current_version_id
                date1 = datetime(day=self.segundo_fecha_fin.day, month=self.segundo_fecha_fin.month, year=self.segundo_fecha_fin.year) + timedelta(days=1)
                date2 = datetime(day=contrato.date_start.day, month=contrato.date_start.month, year=contrato.date_start.year)
                no_dias = date1- date2
@@ -395,9 +395,9 @@ class CalculoSBC(models.TransientModel):
         for employee, payslips in employees.items():
             total_gravado = 0
             dias_periodo = 0
-            if not employee.contract_id:
+            if not employee.current_version_id:
                 continue
-            contrato = employee.contract_id[0]
+            contrato = employee.current_version_id
             date1 = datetime(day=self.segundo_fecha_fin.day, month=self.segundo_fecha_fin.month, year=self.segundo_fecha_fin.year) + timedelta(days=1)
             date2 = datetime(day=contrato.date_start.day, month=contrato.date_start.month, year=contrato.date_start.year)
             no_dias = date1- date2
@@ -494,19 +494,19 @@ class CalculoSBC(models.TransientModel):
             resultado = round(nsbc + total_gravado/round(dias_periodo),2)
             if resultado > 25 * contrato.tablas_cfdi_id.uma:
                resultado = 25 * contrato.tablas_cfdi_id.uma
-            if employee.contract_ids:
-                    #employee.contract_ids[0].write({
+            if employee.current_version_id:
+                    #employee.current_version_id.write({
                     #                                'sueldo_base_cotizacion' : resultado,
                     #                                })
                     incidencia = self.env['incidencias.nomina'].create({'tipo_de_incidencia':'Cambio salario', 
                                                                    'employee_id': employee.id,
-                                                                   'sueldo_mensual': employee.contract_ids[0].wage,
-                                                                   'sueldo_diario': employee.contract_ids[0].sueldo_diario,
-                                                                   'sueldo_diario_integrado': employee.contract_ids[0].sueldo_diario_integrado,
-                                                                   'sueldo_por_horas' : employee.contract_ids[0].sueldo_hora,
+                                                                   'sueldo_mensual': employee.current_version_id.wage,
+                                                                   'sueldo_diario': employee.current_version_id.sueldo_diario,
+                                                                   'sueldo_diario_integrado': employee.current_version_id.sueldo_diario_integrado,
+                                                                   'sueldo_por_horas' : employee.current_version_id.sueldo_hora,
                                                                    'sueldo_cotizacion_base': resultado,
                                                                    'fecha': self.fecha_aplicacion,
-                                                                   'contract_id': employee.contract_ids[0].id
+                                                                   'contract_id': employee.current_version_id.id
                                                                    })
                    # incidencia.action_validar()
         return True

@@ -73,7 +73,7 @@ class PurchaseOrderLine(models.Model):
                 date=line.order_id.date_order
                 and line.order_id.date_order.date()
                 or fields.Date.context_today(line),
-                uom_id=line.product_uom,
+                uom_id=line.product_uom_id,
                 params={"order_id": line.order_id},
             )
             line._apply_value_from_seller(seller)

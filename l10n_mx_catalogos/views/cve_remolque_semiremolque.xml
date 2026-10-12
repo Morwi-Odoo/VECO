@@ -3,10 +3,10 @@
       <field name="name">cve.remolque.semiremolque.tree</field>
       <field name="model">cve.remolque.semiremolque</field>
       <field name="arch" type="xml">
-        <tree>
+        <list>
           <field name="clave"/>
           <field name="descripcion"/>
-        </tree>
+        </list>
       </field>
     </record>
 
@@ -30,7 +30,7 @@
       <record id="action_catalogos_remolque_semiremolque" model="ir.actions.act_window">
         <field name="name">Catálogo de CVE Remolque o Semiremolque</field>
         <field name="res_model">cve.remolque.semiremolque</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
       </record>
 
       <menuitem id="catalogos_menu_cve_remolque_semiremolque" name="CVE Remolque o Semiremolque" parent="catalogos_traslado_menu_principal" action="action_catalogos_remolque_semiremolque"/>

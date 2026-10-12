@@ -218,7 +218,6 @@ class TablasCFDI(models.Model):
             if self.search([('id', '!=', self.id),('name','=',self.name)]):
                 raise ValidationError(_('Reference with same name already exist.'))
             
-    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         default = dict(default or {})
         default.setdefault('name', _("%s (copy)") % (self.name or ''))

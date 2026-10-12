@@ -146,12 +146,10 @@
                 <filter name="draft" string="Borrador" domain="[('state','=','draft')]" help="Draft Loan"/>
                 <filter name="done" string="Hecho" domain="[('state','=','done')]" help="Done Loan"/>
                 <field name="employee_id"/>
-                <group expand="0" string="Agrupar por">
-                    <filter string="Empleado" name="employee_id" context="{'group_by':'employee_id'}"/>
-                  <!--  <filter string="Administrador" name="manager_id" context="{'group_by':'manager_id'}"/>-->
-                    <filter string="Tipo de deducción" name="type" context="{'group_by':'loan_type_id'}"/>
-                    <filter string="Estado" name="state" context="{'group_by':'state'}"/>
-                </group>
+                <filter string="Empleado" name="employee_id" context="{'group_by':'employee_id'}"/>
+              <!--  <filter string="Administrador" name="manager_id" context="{'group_by':'manager_id'}"/>-->
+                <filter string="Tipo de deducción" name="type" context="{'group_by':'loan_type_id'}"/>
+                <filter string="Estado" name="state" context="{'group_by':'state'}"/>
             </search>
         </field>
     </record>

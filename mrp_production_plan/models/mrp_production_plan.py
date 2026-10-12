@@ -18,7 +18,7 @@ class MrpProductionPlanItem(models.Model):
     # Sale Fields
     in_date = fields.Date(
         'Reception Date',  # Ingreso
-        default=fields.date.today(),
+        default=fields.Date.today,
     )
     sale_id = fields.Many2one(
         'sale.order',
@@ -46,7 +46,7 @@ class MrpProductionPlanItem(models.Model):
         store=True,
     )
     uom = fields.Many2one(
-        related="sale_line_id.product_uom",
+        related="sale_line_id.product_uom_id",
         string='UoM',  # UM
         store=True,
     )

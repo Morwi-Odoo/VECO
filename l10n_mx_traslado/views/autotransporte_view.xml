@@ -4,13 +4,13 @@
         <field name="name">autotransporte.tree.view</field>
         <field name="model">ccp.autotransporte</field>
         <field name="arch" type="xml">
-        <tree string="Autotransporte">
+        <list string="Autotransporte">
         	<field name="name" />
             <field name="descripcion" />
             <field name="confvehicular" />
             <field name="placavm" />
             <field name="aniomodelo" />
-         </tree> 
+         </list> 
        </field>
     </record>
    <record id="form_autotransporte_view" model="ir.ui.view">
@@ -55,7 +55,7 @@
         <field name="name">Autotransporte</field>
         <field name="res_model">ccp.autotransporte</field>
         <!-- <field name="view_type">form</field> -->
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="view_id" ref="tree_autotransporte_view" />
         <field name="search_view_id" ref="search_autotransporte_view" />
         <field name="context">{}</field>

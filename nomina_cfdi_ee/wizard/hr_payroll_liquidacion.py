@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from datetime import date
 
 import time
-from odoo.exceptions import Warning, UserError
+from odoo.exceptions import UserError
 import logging
 _logger = logging.getLogger(__name__)
 
@@ -27,7 +27,7 @@ class GeneraLiquidaciones(models.TransientModel):
     dias_prima_vac = fields.Float('Días prima vacacional')
     fondo_ahorro = fields.Float('Fondo ahorro', compute="get_fondo_ahorro", store=True)
     pago_separacion = fields.Float("Pago por separación")
-    contract_id = fields.Many2one('hr.contract', string='Contrato')
+    contract_id = fields.Many2one('hr.version', string='Contrato')
     antiguedad_anos = fields.Float('Antiguedad', store=True)
 
     monto_prima_antiguedad = fields.Float('Prima antiguedad', store=True)
@@ -110,7 +110,7 @@ class GeneraLiquidaciones(models.TransientModel):
         payslip_vals.append({
             'name': 'Payslip - %s' % (employee.name),
             'struct_id' : self.estructura.id,
-            'contract_id' : contract_id,
+            'version_id' : contract_id,
             'employee_id' : employee.id,
             'worked_days_line_ids' : worked_days,
             'input_line_ids' : other_inputs,
@@ -118,7 +118,7 @@ class GeneraLiquidaciones(models.TransientModel):
             'payslip_run_id' : batch.id,
             'date_from': date_from,
             'date_to': date_to,
-            'contract_id' : contract_id,
+            'version_id' : contract_id,
             'fecha_pago' : date_to,
             'mes': str(date_to.month).zfill(2),
             'dias_pagar': dias_pagar,
@@ -161,7 +161,7 @@ class GeneraLiquidaciones(models.TransientModel):
                'payslip_run_id' : batch.id,
                'date_from': date_from,
                'date_to': date_to,
-               'contract_id' : contract_id,
+               'version_id' : contract_id,
                'dias_pagar': 1,
                'fecha_pago' : date_to,
                'worked_days_line_ids': worked_days2,
@@ -287,8 +287,6 @@ class GeneraLiquidaciones(models.TransientModel):
             #prima vacacional liquidacion
             self.dias_prima_vac = self.dias_vacaciones * self.prima_vac / 100.0
 
-            self.refresh()
-          
         action = self.sudo().env.ref('nomina_cfdi_ee.action_wizard_liquidacion').read()[0]
         action['res_id'] = self.id
         return action
@@ -299,12 +297,12 @@ class GeneraLiquidaciones(models.TransientModel):
     def get_fondo_ahorro(self):
         for record in self:
           if record.employee_id:
-            contract = record.employee_id.contract_ids[0]
+            contract = record.employee_id.current_version_id
             if contract:
                if contract.tablas_cfdi_id:
                    abono = 0
                    retiro = 0
-                   domain=[('state','=', 'done')]
+                   domain=[('state','=', 'validated')]
                    domain.append(('employee_id','=',record.employee_id.id))
                    if contract.tablas_cfdi_id.caja_ahorro_abono:
                         rules = record.env['hr.salary.rule'].search([('code', '=', contract.tablas_cfdi_id.caja_ahorro_abono.code)], limit=1)

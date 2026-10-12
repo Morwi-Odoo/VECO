@@ -44,7 +44,7 @@
         <field name="model">purchase.order.line</field>
         <field name="inherit_id" ref="purchase.purchase_history_tree" />
         <field name="arch" type="xml">
-            <field name="price_unit" position="after">
+            <field name="price_unit_product_uom" position="after">
                 <field name="discount" />
             </field>
         </field>

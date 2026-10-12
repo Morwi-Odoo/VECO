@@ -8,21 +8,21 @@
             <form string="Import Bank Statements">
                 <sheet>
                     <field name="xunnel_token" invisible="True" />
-                    <p attrs="{'invisible': [('xunnel_token', '=', False)]}">
+                    <p invisible="xunnel_token == False">
                         You are about to download your bank accounts.
                         <br/>
                         <br/>
                         Are you sure you want to do this action? Press the cancel button to abort the process.
                     </p>
-                    <p class="mb-0" attrs="{'invisible': [('xunnel_token', '!=', False)]}">
+                    <p class="mb-0" invisible="xunnel_token != False">
                         <p>Your company must have a token to continue with this proccess, go to Configuration > Settings > Xunnel Account or Settings > Accounting > Xunnel Account and add one in the Xunnel Token field</p>
                     </p>
                 </sheet>
-                <footer class="text-right" attrs="{'invisible': [('xunnel_token', '=', False)]}">
+                <footer class="text-right" invisible="xunnel_token == False">
                     <button name="sync_xunnel_providers" string="Acept &amp; download" type="object" class="btn btn-primary __css_btn_xunnel__"/>
                     <button string="Cancel" class="btn btn-secondary __css_btn_xunnel__" special="cancel"/>
                 </footer>
-                <footer class="text-right" attrs="{'invisible': [('xunnel_token', '!=', False)]}">
+                <footer class="text-right" invisible="xunnel_token != False">
                     <button class="btn btn-secondary __css_btn_xunnel__" special="cancel" string="Cancel"/>
                 </footer>
             </form>

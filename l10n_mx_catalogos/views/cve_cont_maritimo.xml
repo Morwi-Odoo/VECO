@@ -3,10 +3,10 @@
       <field name="name">cve.cont.maritimo.tree</field>
       <field name="model">cve.cont.maritimo</field>
       <field name="arch" type="xml">
-        <tree>
+        <list>
           <field name="clave"/>
           <field name="descripcion"/>
-        </tree>
+        </list>
       </field>
     </record>
 
@@ -30,7 +30,7 @@
       <record id="action_catalogos_cont_maritimo" model="ir.actions.act_window">
         <field name="name">Catálogo de CVE Contenedor Maritimo</field>
         <field name="res_model">cve.cont.maritimo</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
       </record>
 
       <menuitem id="catalogos_menu_cve_cont_maritimo" name="CVE Contenedor Maritimo" parent="catalogos_traslado_menu_principal" action="action_catalogos_cont_maritimo"/>

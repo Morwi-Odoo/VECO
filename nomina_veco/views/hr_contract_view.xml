@@ -2,12 +2,12 @@
 <odoo>
    <record id="hr_contract_view_form_dvi" model="ir.ui.view">
         <field name="name">hr.contract.dvi</field>
-        <field name="model">hr.contract</field>
+        <field name="model">hr.version</field>
         <field name="inherit_id" ref="nomina_cfdi_ee.hr_contract_view_form_nomina_cfdi"/>
         <field name="arch" type="xml">
           <field name="deduccion_adicional_amount" position="after">
               <field name="retencion_judicial" />
-              <field name="retencion_judicial_amount" attrs="{'invisible':[('retencion_judicial','=',False)]}"/>
+              <field name="retencion_judicial_amount" invisible="not retencion_judicial"/>
           </field>
         </field>
     </record>

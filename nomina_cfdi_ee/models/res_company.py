@@ -70,19 +70,19 @@ class ResCompany(models.Model):
 
         where_clause = []
         while start_week_day<=end_week_day:
-            where_clause.append("TO_CHAR(date_start,'MM-DD')='%s-%s'"%("{0:0=2d}".format(start_week_day.month),"{0:0=2d}".format(start_week_day.day)))
+            where_clause.append("TO_CHAR(contract_date_start,'MM-DD')='%s-%s'"%("{0:0=2d}".format(start_week_day.month),"{0:0=2d}".format(start_week_day.day)))
             start_week_day = start_week_day + timedelta(days=1) #.date()
         where_clause = " OR ".join(where_clause)
-        
+
         for company in companies:
-            cr.execute("select id from hr_contract where (%s) and company_id=%d"%(where_clause,company.id))
+            cr.execute("select id from hr_version where (%s) and company_id=%d"%(where_clause,company.id))
             contract_ids = [r[0] for r in cr.fetchall()]
             if not contract_ids:
                 continue
-            for contract in self.env['hr.contract'].browse(contract_ids):
-                if contract.state != 'open':
+            for contract in self.env['hr.version'].browse(contract_ids):
+                if not contract.is_in_contract:
                    continue
-                if contract.date_start.year == datetime.today().date().year:
+                if contract.contract_date_start.year == datetime.today().date().year:
                    continue
                 change_done =  False
                 for vacation_line in contract.tabla_vacaciones:

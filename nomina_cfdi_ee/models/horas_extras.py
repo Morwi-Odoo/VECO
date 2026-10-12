@@ -7,7 +7,7 @@ class HorasNomina(models.Model):
     _name = 'horas.nomina'
     _description = 'HorasNomina'
 
-    name = fields.Char("Name", required=True, copy=False, readonly=True, states={'draft': [('readonly', False)]}, index=True, default=lambda self: _('New'))
+    name = fields.Char("Name", required=True, copy=False, readonly=True, index=True, default=lambda self: _('New'))
     employee_id = fields.Many2one('hr.employee', string='Empleado')
     fecha = fields.Date('Fecha')
     tipo_de_hora = fields.Selection([('1','Simple'),
@@ -31,14 +31,15 @@ class HorasNomina(models.Model):
                         'company_id': company.id,
                     })
 
-    @api.model
-    def create(self, vals):
-        if vals.get('name', _('New')) == _('New'):
-            if 'company_id' in vals:
-                vals['name'] = self.env['ir.sequence'].with_company(vals['company_id']).next_by_code('horas.nomina') or _('New')
-            else:
-                vals['name'] = self.env['ir.sequence'].next_by_code('horas.nomina') or _('New')
-        result = super(HorasNomina, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('name', _('New')) == _('New'):
+                if 'company_id' in vals:
+                    vals['name'] = self.env['ir.sequence'].with_company(vals['company_id']).next_by_code('horas.nomina') or _('New')
+                else:
+                    vals['name'] = self.env['ir.sequence'].next_by_code('horas.nomina') or _('New')
+        result = super(HorasNomina, self).create(vals_list)
         return result
 
     def action_validar(self):

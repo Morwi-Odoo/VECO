@@ -6,12 +6,12 @@
     'category': 'Accounting/Localizations/EDI',
     'summary': 'Agrega campos para descripciones especificas en los productos',
     'depends': [
-        'l10n_mx_edi_40',
-        'l10n_mx_edi_extended_40',
+        'l10n_mx_edi',
+        'l10n_mx_edi_extended',
     ],
     'data': [
         'security/ir.model.access.csv',
-#        'data/4.0/cfdi.xml',
+        'data/cfdi.xml',
         'views/account_move_view.xml',
     ],
     'installable': True,

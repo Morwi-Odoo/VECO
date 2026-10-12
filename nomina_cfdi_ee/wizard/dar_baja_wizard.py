@@ -28,7 +28,7 @@ class WizardDarBaja(models.TransientModel):
                     'employee_id': rec.employee_id.id,
                     'fecha': self.fecha,
                     'tipo_de_baja': self.tipo_de_baja,
-                    'contract_id': rec.employee_id.contract_id.id,
+                    'contract_id': rec.employee_id.current_version_id.id,
                 }
                 record = self.env['incidencias.nomina'].create(vals)
                 record.action_validar()

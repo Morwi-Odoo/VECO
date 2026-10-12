@@ -8,11 +8,11 @@
             <group col="4" string="Generales">
                 <field name="employee_id" required="1"/>
                 <field name="fecha_inicio" required="1"/>
-                <field name="contract_id" required="1" domain="[('employee_id','=',employee_id),('state','!=','cancel')]" />
+                <field name="contract_id" required="1" domain="[('employee_id','=',employee_id),('active','=',True)]" />
                 <field name="fecha_liquidacion" required="1"/>
                 <field name="tipo_de_baja" required="1"/>
             </group>
-            <group col="2" string="Liquidacion / Compensación" attrs="{'invisible':[('tipo_de_baja','=', '01')]}">
+            <group col="2" string="Liquidacion / Compensación" invisible="tipo_de_baja == '01'">
                 <group string="Configuración">
                    <field name="antiguedad_anos" force_save="1"/>
                    <field name="sueldo_calculo"/>
@@ -64,6 +64,6 @@
         <field name="target">new</field>
     </record>
 
-    <menuitem id="menu_action_wizard_reglas_salariales" name="Genera liquidaciones"  action="action_wizard_liquidacion" parent="hr_work_entry_contract_enterprise.menu_hr_payroll_root" sequence="80" groups="hr_payroll.group_hr_payroll_user"/>
+    <menuitem id="menu_action_wizard_reglas_salariales" name="Genera liquidaciones"  action="action_wizard_liquidacion" parent="hr_work_entry_enterprise.menu_hr_payroll_root" sequence="80" groups="hr_payroll.group_hr_payroll_user"/>
 
 </odoo>

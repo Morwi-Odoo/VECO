@@ -3,10 +3,10 @@
       <field name="name">cve.derecho.paso.tree</field>
       <field name="model">cve.derecho.paso</field>
       <field name="arch" type="xml">
-        <tree>
+        <list>
           <field name="clave"/>
           <field name="derecho_paso"/>
-        </tree>
+        </list>
       </field>
     </record>
 
@@ -30,7 +30,7 @@
       <record id="action_catalogos_derecho_paso" model="ir.actions.act_window">
         <field name="name">Catálogo de CVE Derecho de Paso</field>
         <field name="res_model">cve.derecho.paso</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
       </record>
 
       <menuitem id="catalogos_menu_cve_derecho_paso" name="CVE Derecho de Paso" parent="catalogos_traslado_menu_principal" action="action_catalogos_derecho_paso"/>

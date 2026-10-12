@@ -3,7 +3,7 @@
 from odoo import models, fields, api, _
 from datetime import datetime
 from odoo.tools.mimetypes import guess_mimetype
-from odoo.exceptions import Warning, UserError
+from odoo.exceptions import UserError
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, pycompat
 from collections.abc import MutableMapping
 

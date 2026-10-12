@@ -6,7 +6,7 @@ import logging
 _logger = logging.getLogger(__name__)
 
 class Contract(models.Model):
-    _inherit = "hr.contract"
+    _inherit = "hr.version"
     
     periodicidad_pago = fields.Selection(
         selection=[('01', 'Diario'), 
@@ -201,7 +201,7 @@ class TablasVacacioneslLine(models.Model):
     _name = 'tablas.vacaciones.line'
     _description = 'tablas vacaciones'
 
-    form_id = fields.Many2one('hr.contract', string='Vacaciones', required=True)
+    form_id = fields.Many2one('hr.version', string='Vacaciones', required=True)
     dias = fields.Integer('Dias disponibles')
     ano = fields.Selection(
         selection=[('2023', '2023'),

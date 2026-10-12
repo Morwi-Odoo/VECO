@@ -7,8 +7,7 @@ import datetime
 from lxml import etree
 
 from odoo import fields, models, api,_
-from odoo.addons import decimal_precision as dp
-from odoo.exceptions import UserError, Warning
+from odoo.exceptions import UserError
 from reportlab.graphics.barcode import createBarcodeDrawing
 from reportlab.lib.units import mm
 from . import amount_to_text_es_MX
@@ -25,15 +24,15 @@ class CfdiTrasladoLine(models.Model):
     cfdi_traslado_id= fields.Many2one('cfdi.traslado',string="CFDI Traslado")
     product_id = fields.Many2one('product.product',string='Producto',required=True)
     name = fields.Text(string='Descripción',required=True,)
-    quantity = fields.Float(string='Cantidad', digits=dp.get_precision('Unidad de medida del producto'),required=True, default=1)
-    price_unit = fields.Float(string='Precio unitario', required=True, digits=dp.get_precision('Product Price'))
+    quantity = fields.Float(string='Cantidad', digits='Unidad de medida del producto',required=True, default=1)
+    price_unit = fields.Float(string='Precio unitario', required=True, digits='Product Price')
     invoice_line_tax_ids = fields.Many2many('account.tax',string='Taxes')
     currency_id = fields.Many2one('res.currency', related='cfdi_traslado_id.currency_id', store=True, related_sudo=False, readonly=False)
     price_subtotal = fields.Monetary(string='Subtotal',
         store=True, readonly=True, compute='_compute_price', help="Subtotal")
     price_total = fields.Monetary(string='Cantidad (con Impuestos)',
         store=True, readonly=True, compute='_compute_price', help="Cantidad total con impuestos")
-    pesoenkg = fields.Float(string='Peso Kg', digits=dp.get_precision('Product Price'))
+    pesoenkg = fields.Float(string='Peso Kg', digits='Product Price')
     pedimento_no = fields.Char(string=_('Pedimentos'))
     guiaid_numero = fields.Char(string=_('No. Guia'))
     guiaid_descrip = fields.Char(string=_('Descr. guia'))
@@ -270,7 +269,7 @@ class CfdiTraslado(models.Model):
 
     decimales = fields.Float(string='decimales')
     company_id = fields.Many2one('res.company', 'Compañia',
-                                 default=lambda self: self.env['res.company']._company_default_get('cfdi.traslado'))
+                                 default=lambda self: self.env.company)
 
     tipo_transporte = fields.Selection(
         selection=[('01', 'Autotransporte'), 
@@ -333,7 +332,6 @@ class CfdiTraslado(models.Model):
     figuratransporte_ids = fields.One2many('ccp.figura.line', 'cfdi_traslado_id', string='Seguro mercancías', copy=True)
 
 
-    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         default = dict(default or {})
         if self.estado_factura == 'factura_correcta' or self.estado_factura == 'factura_cancelada':
@@ -360,14 +358,15 @@ class CfdiTraslado(models.Model):
 
     journal_id = fields.Many2one('account.journal', 'Diario', default=_default_journal)
 
-    @api.model
-    def create(self, vals):
-        if vals.get('number', _('Draft Invoice')) == _('Draft Invoice'):
-            if 'company_id' in vals:
-                vals['number'] = self.env['ir.sequence'].with_context(force_company=vals['company_id']).next_by_code('cfdi.traslado') or _('Draft Invoice')
-            else:
-                vals['number'] = self.env['ir.sequence'].next_by_code('cfdi.traslado') or _('Draft Invoice')
-        result = super(CfdiTraslado, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('number', _('Draft Invoice')) == _('Draft Invoice'):
+                if 'company_id' in vals:
+                    vals['number'] = self.env['ir.sequence'].with_context(force_company=vals['company_id']).next_by_code('cfdi.traslado') or _('Draft Invoice')
+                else:
+                    vals['number'] = self.env['ir.sequence'].next_by_code('cfdi.traslado') or _('Draft Invoice')
+        result = super(CfdiTraslado, self).create(vals_list)
         return result
 
     def action_valid(self):
@@ -826,14 +825,14 @@ class CfdiTraslado(models.Model):
                 invoice.write({'proceso_timbrado': False})
                 self.env.cr.commit()
                 if "Name or service not known" in error or "Failed to establish a new connection" in error:
-                    raise Warning("No se pudo conectar con el servidor.")
+                    raise UserError("No se pudo conectar con el servidor.")
                 else:
-                    raise Warning(error)
+                    raise UserError(error)
 
             if "Whoops, looks like something went wrong." in response.text:
                 invoice.write({'proceso_timbrado': False})
                 self.env.cr.commit()
-                raise Warning("Error en el proceso de timbrado, espere un minuto y vuelva a intentar timbrar nuevamente. \nSi el error aparece varias veces reportarlo con la persona de sistemas.")
+                raise UserError("Error en el proceso de timbrado, espere un minuto y vuelva a intentar timbrar nuevamente. \nSi el error aparece varias veces reportarlo con la persona de sistemas.")
             else:
                 json_response = response.json()
             estado_factura = json_response['estado_factura']
@@ -913,12 +912,12 @@ class CfdiTraslado(models.Model):
                 except Exception as e:
                     error = str(e)
                     if "Name or service not known" in error or "Failed to establish a new connection" in error:
-                        raise Warning("No se pudo conectar con el servidor.")
+                        raise UserError("No se pudo conectar con el servidor.")
                     else:
-                        raise Warning(error)
+                        raise UserError(error)
 
                 if "Whoops, looks like something went wrong." in response.text:
-                    raise Warning("Error en el proceso de timbrado, espere un minuto y vuelva a intentar timbrar nuevamente. \nSi el error aparece varias veces reportarlo con la persona de sistemas.")
+                    raise UserError("Error en el proceso de timbrado, espere un minuto y vuelva a intentar timbrar nuevamente. \nSi el error aparece varias veces reportarlo con la persona de sistemas.")
 
                 json_response = response.json()
 
@@ -928,7 +927,7 @@ class CfdiTraslado(models.Model):
                 elif json_response['estado_factura'] == 'solicitud_cancelar':
                     # invoice.write({'estado_factura': json_response['estado_factura']})
                     log_msg = "Se solicitó cancelación de CFDI"
-                    # raise Warning(_(json_response['problemas_message']))
+                    # raise UserError(_(json_response['problemas_message']))
                 elif json_response.get('factura_xml', False):
                     file_name = 'CANCEL_' + invoice.number.replace('/', '_') + '.xml'
                     self.env['ir.attachment'].sudo().create(

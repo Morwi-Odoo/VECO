@@ -376,14 +376,14 @@
 			</t>
 		</template>
 
-        <report id="report_nomina_liquidaciones"
-                model="hr.payslip.run"
-                string="Liquidaciones"
-                report_type="qweb-pdf"
-                name="nomina_cfdi_extras_ee.report_liquidaciones_document"
-                file="nomina_cfdi_extras_ee.report_liquidaciones_document"
-                paperformat="nomina_cfdi_extras_ee.paperformat_liquidaciones"
-                menu="False"/>
+        <record id="report_nomina_liquidaciones" model="ir.actions.report">
+            <field name="name">Liquidaciones</field>
+            <field name="model">hr.payslip.run</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">nomina_cfdi_extras_ee.report_liquidaciones_document</field>
+            <field name="report_file">nomina_cfdi_extras_ee.report_liquidaciones_document</field>
+            <field name="paperformat_id" ref="nomina_cfdi_extras_ee.paperformat_liquidaciones"/>
+        </record>
 
      </data>
 </odoo>

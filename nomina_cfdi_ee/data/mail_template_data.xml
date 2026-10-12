@@ -11,8 +11,7 @@
             <field name="email_to">{{object.employee_id.correo_electronico or object.employee_id.work_email}}</field>
             <field name="model_id" ref="hr_payroll.model_hr_payslip"/>
             <field name="auto_delete" eval="True"/>
-            <field name="report_template" ref="report_payslips"/>
-            <field name="report_name">{{object.name.replace('/', '_') + '.pdf'}}</field>
+            <field name="report_template_ids" eval="[(4, ref('report_payslips'))]"/>
             <!-- <field name="lang">${object.partner_id.lang}</field> -->
             <field name="body_html"><![CDATA[
 <p>Hola, <t t-out="object.employee_id.name or ''" data-oe-t-inline="true" contenteditable="false"></p>

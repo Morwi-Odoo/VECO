@@ -3,11 +3,11 @@
       <field name="name">cve.contenedor.tree</field>
       <field name="model">cve.contenedor</field>
       <field name="arch" type="xml">
-        <tree>
+        <list>
           <field name="clave"/>
           <field name="tipo_contenedor"/>
           <field name="descripcion"/>
-        </tree>
+        </list>
       </field>
     </record>
 
@@ -32,7 +32,7 @@
       <record id="action_catalogos_contenedor" model="ir.actions.act_window">
         <field name="name">Catálogo de CVE Contenedor</field>
         <field name="res_model">cve.contenedor</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
       </record>
 
       <menuitem id="catalogos_menu_cve_contenedor" name="CVE Contenedor" parent="catalogos_traslado_menu_principal" action="action_catalogos_contenedor"/>

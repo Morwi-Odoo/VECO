@@ -29,8 +29,7 @@
 
             </field>
 
-            <field name="report_template" ref="report_facturatraslado"/>
-            <field name="report_name">Factura de traslado ${object.number}</field>
+            <field name="report_template_ids" eval="[(4, ref('report_facturatraslado'))]"/>
         </record>
 
        <record id="email_template_alarma_de_saldo" model="mail.template">

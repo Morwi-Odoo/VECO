@@ -16,7 +16,7 @@ class EntregaFondoCaja(models.TransientModel):
         employee_ids = self.env['hr.employee'].search([])
         if len(employee_ids) >= 1:
             for employee in employee_ids:
-                if len(employee.contract_ids) > 0:
+                if employee.current_version_id:
                    new_caja_nomina_id = self.env['caja.nomina'].create({
                       'employee_id' : employee.id,
                       'fecha_solicitud': self.fecha_solicitud,

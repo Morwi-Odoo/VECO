@@ -3,10 +3,10 @@
       <field name="name">cve.clave.unidad.tree</field>
       <field name="model">cve.clave.unidad</field>
       <field name="arch" type="xml">
-        <tree>
+        <list>
           <field name="clave"/>
           <field name="nombre"/>
-        </tree>
+        </list>
       </field>
     </record>
 
@@ -30,7 +30,7 @@
       <record id="action_catalogos_clave_unidad" model="ir.actions.act_window">
         <field name="name">Catálogo de CVE Clave Unidad</field>
         <field name="res_model">cve.clave.unidad</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
       </record>
 
       <menuitem id="catalogos_menu_cve_clave_unidad" name="CVE Clave Unidad" parent="catalogos_traslado_menu_principal" action="action_catalogos_clave_unidad"/>

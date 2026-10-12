@@ -8,7 +8,7 @@
               <field name="credit_note" position="after">
                     <field name="tipo_nomina"/>
                     <field name="fecha_pago"/>
-                    <field name="mes" attrs="{'required':[('tipo_nomina','=','O')], 'invisible':[('tipo_nomina','!=','O')]}"/>
+                    <field name="mes" required="tipo_nomina == 'O'" invisible="tipo_nomina != 'O'"/>
                     <field name="ultima_nomina"/>
                     <field name="periodicidad_pago" invisible="1"/>
                     <field name="nomina_cfdi" invisible="1"/>
@@ -30,14 +30,14 @@
                                 <field name="nom_liquidacion"/>
                                 <field name="isr_anual"/>
                             </group>
-                            <group name="mensual" string="Acumulados (mensual)"  attrs="{'invisible' : [('isr_ajustar','=',False)]}">
+                            <group name="mensual" string="Acumulados (mensual)"  invisible="isr_ajustar == False">
                                 <field name="acum_per_totales" />
                                 <field name="acum_per_grav" />
                                 <field name="acum_isr" />
                                 <field name="acum_isr_antes_subem" />
                                 <field name="acum_subsidio_aplicado" />
                             </group>
-                            <group name="anual" string="Acumulados (anual)" attrs="{'invisible' : [('isr_anual','=',False)]}">
+                            <group name="anual" string="Acumulados (anual)" invisible="isr_anual == False">
                                 <field name="acum_per_grav_anual" />
                                 <field name="acum_isr_anual" />
                               <!--  <field name="acum_isr_antes_subem_anual" />-->
@@ -80,7 +80,7 @@
               </xpath>
 
               <button name="action_payslip_cancel" position="before">
-                   <button name="send_nomina" class="oe_highlight" attrs="{'invisible':[('estado_factura','!=','factura_correcta')]}" string="Enviar por correo" type="object"/>
+                   <button name="send_nomina" class="oe_highlight" invisible="estado_factura != 'factura_correcta'" string="Enviar por correo" type="object"/>
                 </button>
             </field>
         </record>
@@ -117,28 +117,28 @@
                                           <field name="date_start" class="oe_inline"/> - <field name="date_end" class="oe_inline"  force_save="1"/> <!--readonly="1"-->
                                        </div>
                                        <field name="fecha_pago"/>
-                                       <field name="mes" attrs="{'required':[('tipo_nomina','=','O')], 'invisible':[('tipo_nomina','!=','O')]}"/>
+                                       <field name="mes" required="tipo_nomina == 'O'" invisible="tipo_nomina != 'O'"/>
                                     </group>
                                     <group>
-                                       <field name="tipo_configuracion"  attrs="{'invisible':[('tipo_nomina','!=','O')]}"/>
-                                       <field name="estructura" attrs="{'invisible' : [('tipo_nomina','!=','E')]}"/>
+                                       <field name="tipo_configuracion"  invisible="tipo_nomina != 'O'"/>
+                                       <field name="estructura" invisible="tipo_nomina != 'E'"/>
                                        <field name="periodicidad_pago"/>
                                        <field name="dias_pagar" />
                                     </group>
                                  </group>
                                 <group cols="4">
                                    <group  string="Configuración">
-                                       <field name="ultima_nomina" /> <!--attrs="{'required':[('tipo_nomina','=','O')], 'invisible':[('tipo_nomina','!=','O')]}" /> -->
+                                       <field name="ultima_nomina" /> <!--required="tipo_nomina == 'O'" invisible="tipo_nomina != 'O'" /> -->
                                        <field name="concepto_periodico"/>
                                    </group>
                                    <group  string="ISR">
                                        <field name="isr_ajustar"/>
                                        <field name="isr_anual"/>
                                    </group>
-                                   <group  string="Dias a cotizar IMSS" attrs="{'invisible':[('tipo_nomina','!=','O')]}">
-                                       <field name="imss_dias"  attrs="{'invisible':[('tipo_nomina','!=','O')]}" />
-                                       <field name="imss_mes"  attrs="{'invisible':[('tipo_nomina','!=','O')]}" />
-                                       <field name="nominas_mes" attrs="{'invisible':[('tipo_nomina','!=','O')]}" />
+                                   <group  string="Dias a cotizar IMSS" invisible="tipo_nomina != 'O'">
+                                       <field name="imss_dias"  invisible="tipo_nomina != 'O'" />
+                                       <field name="imss_mes"  invisible="tipo_nomina != 'O'" />
+                                       <field name="nominas_mes" invisible="tipo_nomina != 'O'" />
                                    </group>
                                 </group>
                             </page>
@@ -148,11 +148,11 @@
 		                	<page name="otras_entradas" string="Otras Entradas">
 		                		<group  string="Otras entradas">
 				                   <field name="tabla_otras_entradas">
-				                            <tree editable="bottom">
+				                            <list editable="bottom">
 				                               <field name="descripcion"/>
 				                               <field name="codigo"/>
 				                               <field name="monto"/>
-				                            </tree>
+				                            </list>
 				                        </field>
 				                 </group>
 		                	</page>
@@ -165,8 +165,8 @@
                 <button name="action_draft" position="after">
                     <field name="all_payslip_generated" invisible="1" />
                     <field name="all_payslip_generated_draft" invisible="1" />
-                    <button string="Enviar Nomina" name="enviar_nomina" type="object" attrs="{'invisible':[('state','=','close')]}" class="oe_highlight"/>
-                    <button string="Recalcular nómina" name="recalcular_nomina" type="object" attrs="{'invisible':['|', ('all_payslip_generated_draft','!=',True), ('state','=','close')]}" class="oe_highlight"/>
+                    <button string="Enviar Nomina" name="enviar_nomina" type="object" invisible="state == '02_close'" class="oe_highlight"/>
+                    <button string="Recalcular nómina" name="recalcular_nomina" type="object" invisible="state == '02_close' or all_payslip_generated_draft != True" class="oe_highlight"/>
                 </button>
             </field>
        </record> 
@@ -193,11 +193,11 @@
                                           <field name="date_start" class="oe_inline"/> - <field name="date_end" class="oe_inline"  force_save="1"/> <!--readonly="1"-->
                                        </div>
                                        <field name="fecha_pago"/>
-                                       <field name="mes" attrs="{'required':[('tipo_nomina','=','O')], 'invisible':[('tipo_nomina','!=','O')]}"/>
+                                       <field name="mes" required="tipo_nomina == 'O'" invisible="tipo_nomina != 'O'"/>
                                     </group>
                                     <group>
-                                       <field name="tipo_configuracion"  attrs="{'invisible':[('tipo_nomina','!=','O')]}"/>
-                                       <field name="estructura" attrs="{'invisible' : [('tipo_nomina','!=','E')]}"/>
+                                       <field name="tipo_configuracion"  invisible="tipo_nomina != 'O'"/>
+                                       <field name="estructura" invisible="tipo_nomina != 'E'"/>
                                        <field name="periodicidad_pago"/>
                                        <field name="dias_pagar" />
                                      <!--  <field name="journal_id" string="Diario de Nómina"/>-->
@@ -208,7 +208,7 @@
                                 </group>-->
                                 <group cols="4">
                                    <group  string="Configuración">
-                                       <field name="ultima_nomina" /> <!--attrs="{'required':[('tipo_nomina','=','O')], 'invisible':[('tipo_nomina','!=','O')]}" /> -->
+                                       <field name="ultima_nomina" /> <!--required="tipo_nomina == 'O'" invisible="tipo_nomina != 'O'" /> -->
                                        <field name="concepto_periodico"/>
                                    </group>
                                   <group  string="ISR">
@@ -216,10 +216,10 @@
                                        <!--<field name="isr_devolver"/>-->
                                        <field name="isr_anual"/>
                                    </group>
-                                   <group  string="Dias a cotizar IMSS" attrs="{'invisible':[('tipo_nomina','!=','O')]}">
-                                       <field name="imss_dias"  attrs="{'invisible':[('tipo_nomina','!=','O')]}" />
-                                       <field name="imss_mes"  attrs="{'invisible':[('tipo_nomina','!=','O')]}" />
-                                       <field name="nominas_mes" attrs="{'invisible':[('tipo_nomina','!=','O')]}" />
+                                   <group  string="Dias a cotizar IMSS" invisible="tipo_nomina != 'O'">
+                                       <field name="imss_dias"  invisible="tipo_nomina != 'O'" />
+                                       <field name="imss_mes"  invisible="tipo_nomina != 'O'" />
+                                       <field name="nominas_mes" invisible="tipo_nomina != 'O'" />
                                    </group>
                                 </group>
                             </page>
@@ -229,11 +229,11 @@
 		                	<page name="otras_entradas" string="Otras Entradas">
 		                		<group  string="Otras entradas">
 				                   <field name="tabla_otras_entradas">
-				                            <tree editable="bottom">
+				                            <list editable="bottom">
 				                               <field name="descripcion"/>
 				                               <field name="codigo"/>
 				                               <field name="monto"/>
-				                            </tree>
+				                            </list>
 				                        </field>
 				                 </group>
 		                	</page>
@@ -243,8 +243,8 @@
                 <button name="action_draft" position="after">
                     <field name="all_payslip_generated" invisible="1" />
                     <field name="all_payslip_generated_draft" invisible="1" />
-                    <button string="Enviar Nomina" name="enviar_nomina" type="object" attrs="{'invisible':[('state','=','close')]}" class="oe_highlight"/>
-                    <button string="Recalcular nómina" name="recalcular_nomina" type="object" attrs="{'invisible':['|', ('all_payslip_generated_draft','!=',True), ('state','=','close')]}" class="oe_highlight"/>
+                    <button string="Enviar Nomina" name="enviar_nomina" type="object" invisible="state == '02_close'" class="oe_highlight"/>
+                    <button string="Recalcular nómina" name="recalcular_nomina" type="object" invisible="state == '02_close' or all_payslip_generated_draft != True" class="oe_highlight"/>
                 </button>
             </field>
        </record> 
@@ -259,7 +259,7 @@
                            <group  string="Configuración">
                                <field name="name" string='Nombre'/>
                                <field name="periodicidad_pago"/>
-                               <field name="tipo_pago"  attrs="{'invisible':[('periodicidad_pago','not in',['04', '05'])]}" />
+                               <field name="tipo_pago"  invisible="periodicidad_pago not in ('04', '05')" />
                            </group>
                            <group  string="ISR">
                                <field name="isr_ajustar"/>
@@ -267,8 +267,8 @@
                            </group>
                            <group  string="IMSS">
                                <field name="fijo_imss"/>
-                               <field name="imss_dias"  attrs="{'invisible':[('fijo_imss','!=',True)]}"/>
-                               <field name="imss_mes"  attrs="{'invisible':[('fijo_imss','!=',True)]}"/>
+                               <field name="imss_dias"  invisible="fijo_imss != True"/>
+                               <field name="imss_mes"  invisible="fijo_imss != True"/>
                            </group>
                        </group>
                    </sheet>

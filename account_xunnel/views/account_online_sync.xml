@@ -9,7 +9,7 @@
                 <field name="is_xunnel" readonly="1"/>
             </xpath>
             <xpath expr="//form/sheet/group[1]/group[1]/field[@name='auto_sync']" position="attributes">
-                <attribute name="attrs">{'invisible': [('is_xunnel', '=', True)]}</attribute>
+                <attribute name="invisible">is_xunnel == True</attribute>
             </xpath>
         </field>
     </record>

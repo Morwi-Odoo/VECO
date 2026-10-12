@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import models,fields,api, _
-from odoo.exceptions import Warning, UserError
+from odoo.exceptions import UserError
 import os
 from lxml import etree
 import base64
@@ -89,7 +89,7 @@ class import_payslip_from_xml(models.TransientModel):
             }
         payslip_id.write(cargar_values)
 
-        xml_file_name = payslip_id.number.replace('/','_') + '.xml'
+        xml_file_name = str(payslip_id.id) + '.xml'
         payslip_id.env['ir.attachment'].sudo().create(
               {
                 'name': xml_file_name,

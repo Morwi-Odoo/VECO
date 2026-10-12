@@ -3,7 +3,6 @@
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 
 from odoo import _, api, fields, models
-from odoo.addons import decimal_precision as dp
 
 
 class ProductTemplate(models.Model):
@@ -177,14 +176,14 @@ class ProductForecastReport(models.Model):
     )
     product_qty = fields.Float(
         'Product Quantity',
-        digits=dp.get_precision('Product Unit of Measure'),
+        digits='Product Unit',
     )
     product_uom = fields.Many2one(
         comodel_name='uom.uom',
         string='Unit of Measure',
     )
     lot_id = fields.Many2one(
-        comodel_name='stock.production.lot',
+        comodel_name='stock.lot',
         string='Lot/Serial Number',
         readonly=True)
     stock_move_id = fields.Many2one(

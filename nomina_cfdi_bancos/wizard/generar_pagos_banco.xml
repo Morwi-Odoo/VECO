@@ -9,17 +9,17 @@
                 <group>
                     <field name="banco_rfc"/>
                     <field name="diario_pago" />
-                    <field name="dato1" attrs="{'invisible':[('banco_rfc','!=','BSM970519DU8')]}"/>
-                    <field name="banamex_no_cliente" attrs="{'invisible':[('banco_rfc','not in',['BNM840515VB1_2', 'BNM840515VB1'])]}"/>
-                    <field name="banamex_secuencia" attrs="{'invisible':[('banco_rfc','not in',['BNM840515VB1_2', 'BNM840515VB1'])]}"/>
-                    <field name="banamex_descripcion" attrs="{'invisible':[('banco_rfc','not in',['BNM840515VB1_2', 'BNM840515VB1'])]}"/>
-                    <field name="banamex_referencia" attrs="{'invisible':[('banco_rfc','not in',['BNM840515VB1_2', 'BNM840515VB1'])]}"/>
-                    <field name="banorte_numero" attrs="{'invisible':[('banco_rfc','!=','BMN930209927')]}"/>
-                    <field name="bbva_referencia" attrs="{'invisible':[('banco_rfc','!=','BBA830831LJ2')]}"/>
-                    <field name="bbva_no_contrato" attrs="{'invisible':[('banco_rfc','!=','BBA830831LJ2')]}"/>
-                    <field name="scotia_numero" attrs="{'invisible':[('banco_rfc','!=','SIN9412025I4')]}"/>
-                    <field name="scotia_cuenta" attrs="{'invisible':[('banco_rfc','!=','SIN9412025I4')]}"/>
-                    <field name="scotia_referencia" attrs="{'invisible':[('banco_rfc','!=','SIN9412025I4')]}"/>
+                    <field name="dato1" invisible="banco_rfc != 'BSM970519DU8'"/>
+                    <field name="banamex_no_cliente" invisible="banco_rfc not in ('BNM840515VB1_2', 'BNM840515VB1')"/>
+                    <field name="banamex_secuencia" invisible="banco_rfc not in ('BNM840515VB1_2', 'BNM840515VB1')"/>
+                    <field name="banamex_descripcion" invisible="banco_rfc not in ('BNM840515VB1_2', 'BNM840515VB1')"/>
+                    <field name="banamex_referencia" invisible="banco_rfc not in ('BNM840515VB1_2', 'BNM840515VB1')"/>
+                    <field name="banorte_numero" invisible="banco_rfc != 'BMN930209927'"/>
+                    <field name="bbva_referencia" invisible="banco_rfc != 'BBA830831LJ2'"/>
+                    <field name="bbva_no_contrato" invisible="banco_rfc != 'BBA830831LJ2'"/>
+                    <field name="scotia_numero" invisible="banco_rfc != 'SIN9412025I4'"/>
+                    <field name="scotia_cuenta" invisible="banco_rfc != 'SIN9412025I4'"/>
+                    <field name="scotia_referencia" invisible="banco_rfc != 'SIN9412025I4'"/>
                     <field name="fecha_dispersion" />
                 </group>
                 <footer>
@@ -38,11 +38,12 @@
     </record> -->
 
     <!-- Add action entry in the Action Menu for Partners -->
-    <act_window id="generar_pagos_banco_action"
-        name="Generar Pagos Banco"
-        res_model="generar.pagos.banco"
-        binding_model="hr.payslip.run"
-        view_mode="form"
-        target="new"/>
+    <record id="generar_pagos_banco_action" model="ir.actions.act_window">
+        <field name="name">Generar Pagos Banco</field>
+        <field name="res_model">generar.pagos.banco</field>
+        <field name="binding_model_id" ref="hr_payroll.model_hr_payslip_run"/>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
         </data>
 </odoo>

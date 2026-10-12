@@ -24,7 +24,7 @@
         <field name="name">registro.patronal.tree</field>
         <field name="model">registro.patronal</field>
         <field name="arch" type="xml">
-            <tree string="Registro patronal">
+            <list string="Registro patronal">
                <field name="registro_patronal"/>
                <field name="descripcion"/>
                <field name="clase_riesgo"/>
@@ -32,7 +32,7 @@
                <field name="no_guia"/>
                <field name="ciudad"/>
                <field name="isn"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -55,7 +55,7 @@
     <record id="action_tree_registro_patronal" model="ir.actions.act_window">
         <field name="name">Registro patronal</field>
         <field name="res_model">registro.patronal</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="view_id" ref="tree_registro_patronal_view" />
         <field name="search_view_id" ref="search_registro_patronal_view" />
         <field name="context">{}</field>
@@ -63,7 +63,7 @@
 
     <menuitem
           name="Registro patronal"
-          parent="hr_work_entry_contract_enterprise.menu_hr_payroll_configuration"
+          parent="hr_work_entry_enterprise.menu_hr_payroll_configuration"
           id="menu_action_tree_registro_patronal"
           action="action_tree_registro_patronal"
           sequence="21"

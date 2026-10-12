@@ -26,13 +26,14 @@ class AccountConfigSettings(models.TransientModel):
         help="Key-like text for authentication in controllers.",
         readonly=False)
 
-    @api.model
-    def create(self, vals):
-        self.env.company.write({
-            'xunnel_token': vals.get('xunnel_token') or self.env.company.xunnel_token,
-        })
-        vals.pop('xunnel_token', None)
-        return super().create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            self.env.company.write({
+                'xunnel_token': vals.get('xunnel_token') or self.env.company.xunnel_token,
+            })
+            vals.pop('xunnel_token', None)
+        return super().create(vals_list)
 
     @assert_xunnel_token
     def sync_xunnel_providers(self):

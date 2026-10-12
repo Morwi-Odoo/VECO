@@ -67,8 +67,7 @@ class MRPProduction(models.Model):
         compute='_compute_sale_amount',
         store=True,
     )
-    x_studio_cliente_p_1 = fields.Many2one(
-        'res.partner',)
+    x_studio_cliente_p_1 = fields.Char()
 
     @api.depends('state')
     def _compute_costs(self):

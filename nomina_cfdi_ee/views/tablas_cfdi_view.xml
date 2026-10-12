@@ -10,52 +10,52 @@
                 <page name="tablas_cfdi" string="Tablas Nomina">
                    <group>
                         <field name="tabla_antiguedades" string="Tabla de antigüedades y vacaciones">
-                            <tree editable="bottom">
+                            <list editable="bottom">
                                 <field name="antiguedad"/>
                                 <field name="vacaciones"/>
                                 <field name="prima_vac"/>
                                 <field name="aguinaldo"/>
-                            </tree>
+                            </list>
                         </field>
                         <field name="tabla_ISR_periodo" string="ISR periodo (semanal / quincenal)">
-                            <tree editable="bottom">
+                            <list editable="bottom">
                                 <field name="lim_inf"/>
                                 <field name="c_fija"/>
                                 <field name="s_excedente"/>
-                            </tree>
+                            </list>
                         </field>
                         <field name="tabla_LISR" string="ISR Mensual">
-                            <tree editable="bottom">
+                            <list editable="bottom">
                                 <field name="lim_inf"/>
                                 <field name="c_fija"/>
                                 <field name="s_excedente"/>
-                            </tree>
+                            </list>
                         </field>
                         <field name="tabla_ISR_anual" string="ISR Anual">
-                            <tree editable="bottom">
+                            <list editable="bottom">
                                 <field name="lim_inf"/>
                                 <field name="c_fija"/>
                                 <field name="s_excedente"/>
-                            </tree>
+                            </list>
                         </field>
                        <!-- <field name="tabla_subem" string="Subem mensual/CAS Mensual">
-                            <tree editable="bottom">
+                            <list editable="bottom">
                                 <field name="lim_inf"/>
                                 <field name="s_mensual"/>
-                            </tree>
+                            </list>
                         </field>
                         <field name="tabla_subsidio" string="Subsidio Mensual Art. 114 LISR"> 
-                            <tree editable="bottom">
+                            <list editable="bottom">
                                 <field name="lim_inf"/>
                                 <field name="c_fija"/>
                                 <field name="s_imp_marginal"/>
-                            </tree>
+                            </list>
                         </field>
                         <field name="tabla_subsidio_acreditable" string="Subsidio acreditable">
-                            <tree editable="bottom">
+                            <list editable="bottom">
                                 <field name="ano"/>
                                 <field name="s_mensual"/>
-                            </tree>
+                            </list>
                         </field>-->
                    </group>
                 </page>
@@ -109,11 +109,11 @@
                             </group>
                             <group>
                                 <field name="tabla_cesantia" string="Cesantia">
-                                   <tree editable="bottom">
+                                   <list editable="bottom">
                                       <field name="lim_inf"/>
                                    <!--   <field name="lim_sup"/>-->
                                       <field name="cuota"/>
-                                   </tree>
+                                   </list>
                                 </field>
                             </group>
                         </group>
@@ -158,19 +158,19 @@
              <page name="periodos" string="Periodos">
                  <group>
                         <field name="tabla_bimestral" string="Periodo bimestral">
-                            <tree editable="bottom">
+                            <list editable="bottom">
                                 <field name="dia_inicio"/>
                                 <field name="dia_fin"/>
                                 <field name="no_dias" force_save="1"/>
-                            </tree>
+                            </list>
                         </field>
                         <field name="tabla_mensual" string="Periodo mensual">
-                            <tree editable="bottom">
+                            <list editable="bottom">
                                 <field name="mes"/>
                                 <field name="dia_inicio"/>
                                 <field name="dia_fin"/>
                                 <field name="no_dias" force_save="1"/>
-                            </tree>
+                            </list>
                         </field>
                  </group>
              </page>
@@ -183,9 +183,9 @@
         <field name="name">tablas.cfdi.tree</field>
         <field name="model">tablas.cfdi</field>
         <field name="arch" type="xml">
-            <tree string="Tablas CFDI">
+            <list string="Tablas CFDI">
                <field name="name"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -202,7 +202,7 @@
     <record id="action_tree_tablas_cfdi" model="ir.actions.act_window">
         <field name="name">Tablas CFDI</field>
         <field name="res_model">tablas.cfdi</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="view_id" ref="tree_tablas_cfdi_view" />
         <field name="search_view_id" ref="search_tablas_cfdi_view" />
         <field name="context">{}</field>
@@ -210,7 +210,7 @@
 
     <menuitem
           name="Tablas CFDI"
-          parent="hr_work_entry_contract_enterprise.menu_hr_payroll_configuration"
+          parent="hr_work_entry_enterprise.menu_hr_payroll_configuration"
           id="menu_action_tree_tablas_cfdi"
           action="action_tree_tablas_cfdi"
           sequence="20"
